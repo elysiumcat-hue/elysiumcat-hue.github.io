@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전문가 캔들 차트 강좌 · Candlestick Mastery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15171C;
+    --ink-soft:#494F5C;
+    --ink-faint:#878D9B;
+    --paper:#F4F6F8;
+    --surface:#FFFFFF;
+    --surface-alt:#EAEEF3;
+    --line:#DCE1E9;
+    --line-soft:#E8ECF2;
+    --rise:#DE2F2A;        /* 상승 빨강 (KR) */
+    --rise-soft:#FBE9E8;
+    --rise-line:#F3C6C4;
+    --fall:#1F5FD0;        /* 하락 파랑 (KR) */
+    --fall-soft:#E7F0FC;
+    --fall-line:#C3D7F4;
+    --flat:#6A7180;
+    --serif: 'IBM Plex Sans KR', sans-serif;
+    --sans: 'IBM Plex Sans KR', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --maxw: 1240px;
+    --content: 720px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--sans);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.72;
+    font-weight:400;
+    font-size:16.5px;
+    letter-spacing:-0.003em;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---- progress bar ---- */
+  .progress-wrap{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:transparent}
+  .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--fall),#7a3fb0 50%,var(--rise));transition:width .08s linear}
+
+  /* ---- top bar ---- */
+  .topbar{
+    position:sticky;top:0;z-index:100;
+    background:rgba(244,246,248,.86);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar-inner{
+    max-width:var(--maxw);margin:0 auto;padding:13px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:11px;font-weight:600;font-size:15px;letter-spacing:-0.01em}
+  .brand .tick{display:inline-flex;gap:2px;align-items:flex-end;height:18px}
+  .brand .tick span{width:3px;border-radius:1px;display:block}
+  .brand .tick span:nth-child(1){height:8px;background:var(--fall)}
+  .brand .tick span:nth-child(2){height:16px;background:var(--rise)}
+  .brand .tick span:nth-child(3){height:11px;background:var(--fall)}
+  .brand .tick span:nth-child(4){height:18px;background:var(--rise)}
+  .brand small{font-family:var(--mono);font-weight:400;color:var(--ink-faint);font-size:11px;letter-spacing:.02em;text-transform:uppercase}
+  .topbar-link{font-family:var(--mono);font-size:12px;color:var(--ink-soft);text-decoration:none;border:1px solid var(--line);padding:7px 13px;border-radius:7px;transition:.18s;white-space:nowrap}
+  .topbar-link:hover{border-color:var(--ink);color:var(--ink);background:var(--surface)}
+  .menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:7px;padding:8px 10px;cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-soft)}
+
+  /* ---- hero ---- */
+  .hero{max-width:var(--maxw);margin:0 auto;padding:72px 28px 40px;position:relative;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.45fr .85fr;gap:48px;align-items:center}
+  .eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:22px;display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:1.5px;background:var(--rise)}
+  .hero h1{font-size:clamp(38px,5.4vw,62px);line-height:1.05;font-weight:700;letter-spacing:-0.035em;margin-bottom:22px}
+  .hero h1 .hl-rise{color:var(--rise)}
+  .hero h1 .hl-fall{color:var(--fall)}
+  .hero-lead{font-size:18px;color:var(--ink-soft);max-width:48ch;margin-bottom:30px;line-height:1.66}
+  .hero-meta{display:flex;gap:28px;flex-wrap:wrap;font-family:var(--mono);font-size:12.5px;color:var(--ink-soft)}
+  .hero-meta b{display:block;font-size:24px;font-weight:600;color:var(--ink);letter-spacing:-0.02em;margin-bottom:2px}
+  .hero-meta .lbl{text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-size:11px}
+
+  /* mini order book viz in hero */
+  .ob-mini{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 18px 40px -28px rgba(20,30,55,.4);overflow:hidden}
+  .ob-mini-head{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;padding-bottom:11px;border-bottom:1px solid var(--line-soft);margin-bottom:6px}
+  .ob-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;font-family:var(--mono);font-size:12.5px;gap:8px;padding:3px 0;position:relative}
+  .ob-row .px{text-align:center;font-weight:500}
+  .ob-row .vol{font-size:11px;color:var(--ink-faint)}
+  .ob-row .vol.l{text-align:right}
+  .ob-bar{position:absolute;top:2px;bottom:2px;border-radius:3px;opacity:.5}
+  .ob-row.ask .ob-bar{right:50%;margin-right:34px;background:var(--fall-soft)}
+  .ob-row.bid .ob-bar{left:50%;margin-left:34px;background:var(--rise-soft)}
+  .ob-row.ask .px{color:var(--fall)}
+  .ob-row.bid .px{color:var(--rise)}
+  .ob-mid{text-align:center;font-family:var(--mono);font-size:13px;font-weight:600;padding:7px 0;margin:5px 0;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);color:var(--ink)}
+
+  /* ---- layout ---- */
+  .layout{max-width:var(--maxw);margin:0 auto;padding:20px 28px 80px;display:grid;grid-template-columns:248px 1fr;gap:52px;align-items:start}
+
+  /* toc */
+  .toc{position:sticky;top:78px;font-size:13.5px}
+  .toc-title{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-faint);margin-bottom:14px;padding-left:14px}
+  .toc ol{list-style:none}
+  .toc li a{
+    display:flex;gap:11px;align-items:baseline;
+    text-decoration:none;color:var(--ink-soft);
+    padding:7px 0 7px 14px;border-left:2px solid var(--line);
+    transition:.16s;line-height:1.4;
+  }
+  .toc li a .n{font-family:var(--mono);font-size:11px;color:var(--ink-faint);min-width:20px}
+  .toc li a:hover{color:var(--ink);border-left-color:var(--ink-faint)}
+  .toc li a.active{color:var(--ink);border-left-color:var(--rise);font-weight:500}
+  .toc li a.active .n{color:var(--rise)}
+
+  /* ---- content ---- */
+  .content{max-width:var(--content);min-width:0}
+  .part{padding-top:56px;scroll-margin-top:72px}
+  .part:first-child{padding-top:8px}
+  .part-head{margin-bottom:26px}
+  .part-kicker{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-faint);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .part-kicker .num{background:var(--ink);color:#fff;border-radius:5px;padding:3px 9px;font-weight:600;letter-spacing:.04em}
+  .part-kicker .of{color:var(--ink-faint)}
+  .part h2{font-size:31px;font-weight:700;letter-spacing:-0.028em;line-height:1.18;margin-bottom:12px}
+  .part-sub{font-size:16.5px;color:var(--ink-soft);line-height:1.6}
+  .part-rule{height:2px;background:linear-gradient(90deg,var(--ink) 0%,var(--ink) 36px,var(--line) 36px);margin:22px 0 4px}
+
+  .lesson{margin-top:38px}
+  .lesson > h3{font-size:20px;font-weight:600;letter-spacing:-0.018em;margin-bottom:12px;display:flex;align-items:baseline;gap:11px}
+  .lesson > h3 .dot{font-family:var(--mono);font-size:13px;color:var(--rise);font-weight:500}
+  .content p{margin:0 0 15px;color:#23262E}
+  .content p + p{margin-top:-2px}
+  .content ul,.content ol.steps{margin:4px 0 18px;padding-left:0;list-style:none}
+  .content ul li{position:relative;padding-left:22px;margin-bottom:9px;color:#23262E}
+  .content ul li::before{content:"";position:absolute;left:4px;top:.7em;width:6px;height:6px;background:var(--rise);border-radius:1px;transform:rotate(45deg)}
+  .content ol.steps{counter-reset:s}
+  .content ol.steps li{position:relative;padding-left:38px;margin-bottom:13px;counter-increment:s}
+  .content ol.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--fall);background:var(--fall-soft);border-radius:5px;width:26px;height:24px;display:flex;align-items:center;justify-content:center}
+  .term{font-weight:600;color:var(--ink);border-bottom:1.5px solid var(--rise-line);padding-bottom:.5px}
+  .en{font-family:var(--mono);font-size:.86em;color:var(--ink-faint);font-weight:400}
+  strong{font-weight:600;color:var(--ink)}
+
+  /* callouts */
+  .callout{border-radius:11px;padding:17px 19px 17px 18px;margin:20px 0;font-size:15px;line-height:1.62;border:1px solid var(--line);background:var(--surface)}
+  .callout .co-label{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .callout .co-label::before{content:"";width:7px;height:7px;border-radius:50%}
+  .callout p:last-child{margin-bottom:0}
+  .co-note{border-left:3px solid var(--flat)}
+  .co-note .co-label{color:var(--flat)} .co-note .co-label::before{background:var(--flat)}
+  .co-rise{background:var(--rise-soft);border-color:var(--rise-line);border-left:3px solid var(--rise)}
+  .co-rise .co-label{color:var(--rise)} .co-rise .co-label::before{background:var(--rise)}
+  .co-fall{background:var(--fall-soft);border-color:var(--fall-line);border-left:3px solid var(--fall)}
+  .co-fall .co-label{color:var(--fall)} .co-fall .co-label::before{background:var(--fall)}
+  .co-warn{background:#FFF8E8;border-color:#F2E3B8;border-left:3px solid #C9962A}
+  .co-warn .co-label{color:#A9791A} .co-warn .co-label::before{background:#C9962A}
+
+  /* tables */
+  .tbl-wrap{margin:20px 0;border:1px solid var(--line);border-radius:11px;overflow:hidden;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:440px}
+  thead th{background:var(--surface-alt);text-align:left;font-weight:600;font-size:12px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.03em;color:var(--ink-soft);padding:11px 15px;border-bottom:1px solid var(--line)}
+  tbody td{padding:11px 15px;border-bottom:1px solid var(--line-soft);color:#23262E;vertical-align:top}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(even){background:#FAFBFC}
+  td .mono,th .mono{font-family:var(--mono)}
+  .num-cell{font-family:var(--mono);text-align:right;white-space:nowrap}
+  .c-rise{color:var(--rise);font-weight:500}
+  .c-fall{color:var(--fall);font-weight:500}
+
+  /* candle demo */
+  .figure{margin:24px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:20px;overflow:hidden}
+  .figure-cap{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);margin-top:14px;text-transform:uppercase;letter-spacing:.04em;display:flex;gap:8px}
+  .figure-cap::before{content:"FIG";color:var(--rise);font-weight:600}
+  .candle-flex{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+  .candle-unit{text-align:center}
+  .candle-unit svg{display:block;margin:0 auto 10px}
+  .candle-unit .nm{font-family:var(--mono);font-size:12px;font-weight:600;margin-bottom:2px}
+  .candle-unit .nm.up{color:var(--rise)} .candle-unit .nm.down{color:var(--fall)}
+  .candle-unit .ds{font-size:12px;color:var(--ink-faint);line-height:1.4}
+
+  /* key-value chips */
+  .kv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin:20px 0}
+  .kv{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 15px}
+  .kv .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);margin-bottom:5px}
+  .kv .v{font-size:15px;font-weight:600;letter-spacing:-0.01em}
+  .kv .v small{font-weight:400;color:var(--ink-soft);font-size:12.5px;font-family:var(--mono)}
+
+  /* recap */
+  .recap{margin-top:30px;background:var(--ink);color:#E8EAEE;border-radius:12px;padding:22px 24px}
+  .recap .rc-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9CA4B5;margin-bottom:13px;display:flex;align-items:center;gap:8px}
+  .recap .rc-label::before{content:"";width:18px;height:1.5px;background:var(--rise)}
+  .recap ul{margin:0;padding:0;list-style:none}
+  .recap ul li{position:relative;padding-left:22px;margin-bottom:9px;font-size:14.5px;color:#CDD2DC;line-height:1.55}
+  .recap ul li:last-child{margin-bottom:0}
+  .recap ul li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;background:var(--rise);border-radius:1px;transform:rotate(45deg)}
+  .recap ul li b{color:#fff}
+
+  /* footer */
+  .footer{border-top:1px solid var(--line);background:var(--surface)}
+  .footer-inner{max-width:var(--maxw);margin:0 auto;padding:40px 28px;display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-end}
+  .footer .disc{font-size:13px;color:var(--ink-soft);max-width:56ch;line-height:1.6}
+  .footer .disc b{color:var(--ink)}
+  .footer .sig{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);text-align:right;line-height:1.7}
+
+  @media (max-width:980px){
+    .hero-grid{grid-template-columns:1fr;gap:34px}
+    .ob-mini{max-width:380px}
+    .layout{grid-template-columns:1fr;gap:0}
+    .toc{position:fixed;inset:0 0 0 auto;width:280px;background:var(--surface);z-index:150;padding:80px 22px 30px;border-left:1px solid var(--line);transform:translateX(100%);transition:transform .26s ease;overflow-y:auto;box-shadow:-20px 0 50px -30px rgba(0,0,0,.3)}
+    .toc.open{transform:translateX(0)}
+    .menu-btn{display:block}
+    .topbar-link{display:none}
+    .scrim{position:fixed;inset:0;background:rgba(15,17,22,.4);z-index:140;opacity:0;pointer-events:none;transition:.26s}
+    .scrim.show{opacity:1;pointer-events:auto}
+  }
+  @media (max-width:560px){
+    body{font-size:16px}
+    .hero{padding:48px 20px 28px}
+    .topbar-inner,.layout,.footer-inner,.hero{padding-left:20px;padding-right:20px}
+    .part h2{font-size:26px}
+    .hero-meta{gap:20px}
+    .candle-flex{gap:24px}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+  /* ===== chart-analysis additions ===== */
+  .chart-svg{display:block;width:100%;height:auto;max-width:580px;margin:0 auto;overflow:visible}
+  .chart-svg .axis{stroke:var(--line);stroke-width:1.5}
+  .chart-svg .grid{stroke:var(--line-soft);stroke-width:1;stroke-dasharray:2 5}
+  .chart-svg .price{fill:none;stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+  .chart-svg .ma-s{fill:none;stroke:var(--rise);stroke-width:2;stroke-linejoin:round}
+  .chart-svg .ma-l{fill:none;stroke:var(--fall);stroke-width:2;stroke-linejoin:round}
+  .chart-svg .tline{stroke:#7a3fb0;stroke-width:2;fill:none;stroke-linecap:round}
+  .chart-svg .tline-d{stroke:#7a3fb0;stroke-width:1.8;fill:none;stroke-dasharray:6 5;stroke-linecap:round}
+  .chart-svg .lvl{stroke:var(--ink-soft);stroke-width:1.5;stroke-dasharray:5 4}
+  .chart-svg .zone-r{fill:var(--rise);opacity:.07}
+  .chart-svg .zone-f{fill:var(--fall);opacity:.07}
+  .chart-svg .neck{stroke:#C9962A;stroke-width:1.8;stroke-dasharray:5 4;fill:none}
+  svg .lbl{font-family:'IBM Plex Mono',monospace;font-size:11px;fill:var(--ink-faint)}
+  svg .lbl-r{fill:var(--rise);font-weight:500}
+  svg .lbl-f{fill:var(--fall);font-weight:500}
+  svg .lbl-p{fill:#7a3fb0;font-weight:500}
+  svg .lbl-w{fill:#A9791A;font-weight:500}
+  svg .anno{font-family:'IBM Plex Mono',monospace;font-size:10.5px;fill:var(--ink-soft)}
+  svg .up-fill{fill:var(--rise)} svg .up-stroke{stroke:var(--rise);stroke-width:1.6}
+  svg .dn-fill{fill:var(--fall)} svg .dn-stroke{stroke:var(--fall);stroke-width:1.6}
+  svg .vol-up{fill:var(--rise);opacity:.5}
+  svg .vol-dn{fill:var(--fall);opacity:.5}
+  svg .mk{fill:#7a3fb0}
+  .chart-legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:12px;font-family:var(--mono);font-size:11.5px;color:var(--ink-soft)}
+  .chart-legend .lg{display:flex;align-items:center;gap:6px}
+  .chart-legend .sw{width:18px;height:3px;border-radius:2px;display:inline-block}
+  .chart-legend .sw.dash{height:0;border-top:2px dashed #7a3fb0;width:18px}
+  /* candle row (pattern strips) */
+  .cndrow{display:flex;gap:30px;justify-content:center;flex-wrap:wrap}
+  .cndrow .unit{text-align:center;max-width:150px}
+  .cndrow .unit svg{display:block;margin:0 auto 9px}
+  .cndrow .unit .nm{font-family:var(--mono);font-size:12.5px;font-weight:600;margin-bottom:3px;letter-spacing:-.01em}
+  .cndrow .unit .nm.up{color:var(--rise)} .cndrow .unit .nm.down{color:var(--fall)} .cndrow .unit .nm.neu{color:var(--flat)}
+  .cndrow .unit .ds{font-size:12px;color:var(--ink-faint);line-height:1.45}
+  /* two-up figure layout */
+  .fig2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .fig2 .col{text-align:center}
+  .fig2 .col .ttl{font-family:var(--mono);font-size:12.5px;font-weight:600;margin-bottom:10px}
+  .fig2 .col .ttl.up{color:var(--rise)} .fig2 .col .ttl.down{color:var(--fall)}
+  @media(max-width:560px){.fig2{grid-template-columns:1fr;gap:26px}}
+
+  /* ===== candlestick-mastery additions ===== */
+  .pcard{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px 18px;display:flex;gap:18px;align-items:flex-start;margin:13px 0}
+  .pcard .pc-svg{flex-shrink:0;width:78px;display:flex;align-items:center;justify-content:center;padding-top:2px}
+  .pcard .pc-body{min-width:0;flex:1}
+  .pcard .pc-name{font-weight:600;font-size:16px;letter-spacing:-0.015em;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+  .pcard .pc-name .en{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);font-weight:400}
+  .pcard .pc-meta{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .pc-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;padding:3px 8px;border-radius:5px;background:var(--surface-alt);color:var(--ink-soft);white-space:nowrap}
+  .pc-tag.rev{background:#F3ECFA;color:#7a3fb0}
+  .pc-tag.cont{background:#E9F3EE;color:#0d8a72}
+  .pc-tag.bull{background:var(--rise-soft);color:var(--rise)}
+  .pc-tag.bear{background:var(--fall-soft);color:var(--fall)}
+  .pc-tag.neu{background:var(--surface-alt);color:var(--flat)}
+  .pcard .pc-desc{font-size:14px;color:var(--ink-soft);line-height:1.62}
+  .pcard .pc-desc b{color:var(--ink)}
+  .pcard.bottom{border-left:3px solid var(--rise)}
+  .pcard.top{border-left:3px solid var(--fall)}
+  .pcard.neutral{border-left:3px solid var(--flat)}
+  /* psychology mini-diagram */
+  .psy{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin:18px 0}
+  .psy .cell{border:1px solid var(--line);border-radius:10px;padding:13px 15px;background:var(--surface)}
+  .psy .cell .ph{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);margin-bottom:6px}
+  .psy .cell .pt{font-size:14px;color:var(--ink-soft);line-height:1.5}
+  .psy .cell .pt b{color:var(--ink)}
+  /* reliability bar */
+  .rel{display:inline-flex;gap:3px;align-items:center;vertical-align:middle}
+  .rel .seg{width:14px;height:6px;border-radius:1px;background:var(--line)}
+  .rel .seg.on{background:var(--rise)}
+  @media(max-width:560px){
+    .pcard{gap:13px;padding:14px}
+    .pcard .pc-svg{width:62px}
+  }
+</style>
+</head>
+<body>
+<div class="progress-wrap"><div class="progress-bar" id="pbar"></div></div>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="tick"><span></span><span></span><span></span><span></span></span>
+      전문가 캔들 강좌 <small>Candlestick</small>
+    </div>
+    <div style="display:flex;gap:8px">
+      <a class="topbar-link" href="chart-course.html">차트 강좌</a>
+      <a class="topbar-link" href="stock-glossary.html">용어집</a>
+    </div>
+    <button class="menu-btn" id="menuBtn">목차 ☰</button>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">Candlestick Mastery · Expert Track</div>
+  <h1>캔들은 <span class="hl-rise">매수</span>와 <span class="hl-fall">매도</span>의<br>심리를 기록한다</h1>
+  <p class="hero-lead">단일 캔들의 그림자 하나부터 3봉 조합·창(갭) 이론까지, 캔들스틱 분석을 패턴 사전 수준으로 깊게 다루는 전문가 강좌입니다. 색은 한국 관행 — <span style="color:var(--rise);font-weight:600">빨강=상승</span>, <span style="color:var(--fall);font-weight:600">파랑=하락</span>.</p>
+  <div class="hero-meta">
+    <div><b>08</b><span class="lbl">파트</span></div>
+    <div><b>30+</b><span class="lbl">패턴</span></div>
+    <div><b>心理</b><span class="lbl">해석 중심</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc">
+    <div class="toc-title">목차 / Contents</div>
+    <ol>
+      <li><a href="#part-1"><span class="n">01</span>캔들의 언어</a></li>
+      <li><a href="#part-2"><span class="n">02</span>단일 캔들 · 강도</a></li>
+      <li><a href="#part-3"><span class="n">03</span>단일 캔들 · 반전</a></li>
+      <li><a href="#part-4"><span class="n">04</span>2봉 패턴</a></li>
+      <li><a href="#part-5"><span class="n">05</span>3봉 패턴</a></li>
+      <li><a href="#part-6"><span class="n">06</span>창(갭) 이론</a></li>
+      <li><a href="#part-7"><span class="n">07</span>신뢰도 높이기</a></li>
+      <li><a href="#part-8"><span class="n">08</span>함정과 현실</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+
+  <!-- ============ PART 1 ============ -->
+  <section class="part" id="part-1">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 01</span><span class="of">/ 08</span></div>
+      <h2>캔들의 언어 — 무엇을 읽는가</h2>
+      <p class="part-sub">패턴을 외우기 전에 캔들이 '왜' 그런 모양이 되는지를 이해해야 합니다. 캔들은 한 기간 동안 벌어진 매수·매도 세력의 전투 기록입니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>몸통·그림자가 담은 심리</h3>
+      <p>캔들 하나는 네 가격(시·고·저·종)으로 그려지지만, 트레이더가 실제로 읽는 것은 <strong>그 가격들 사이의 관계가 말해 주는 심리</strong>입니다.</p>
+      <div class="psy">
+        <div class="cell"><div class="ph">몸통 길이</div><div class="pt"><b>승부의 결과.</b> 길수록 한쪽이 압도, 짧을수록 팽팽한 균형.</div></div>
+        <div class="cell"><div class="ph">윗꼬리</div><div class="pt"><b>거부당한 고가.</b> 위로 올랐다 밀려 내려옴 → 매도 압력의 흔적.</div></div>
+        <div class="cell"><div class="ph">아랫꼬리</div><div class="pt"><b>지켜낸 저가.</b> 아래로 빠졌다 회복됨 → 매수 지지의 흔적.</div></div>
+        <div class="cell"><div class="ph">창(갭)</div><div class="pt"><b>감정의 점프.</b> 시가가 전봉과 떨어져 시작 → 강한 호·악재 반영.</div></div>
+      </div>
+      <p>예컨대 긴 아랫꼬리는 "장중에 크게 밀렸지만 누군가 그 가격을 적극적으로 사들여 끌어올렸다"는 이야기입니다. 이 한 줄의 서사를 읽는 것이 캔들 분석의 본질입니다.</p>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>세 가지 해석 원칙</h3>
+      <ol class="steps">
+        <li><strong>위치가 의미를 결정한다.</strong> 똑같은 모양도 바닥권에서 나오면 반전, 상승 도중이면 무의미할 수 있습니다. 패턴은 항상 '어디에서 나왔는가'와 함께 읽습니다.</li>
+        <li><strong>맥락(추세)을 본다.</strong> 반전 패턴은 '반전시킬 추세'가 먼저 있어야 의미가 있습니다. 추세 없는 자리의 반전 신호는 공허합니다.</li>
+        <li><strong>확인을 기다린다.</strong> 패턴 출현 ≠ 확정. 다음 봉(확인봉)이 방향을 지지해 줄 때 신뢰도가 올라갑니다.</li>
+      </ol>
+      <div class="callout co-note">
+        <div class="co-label">이 강좌의 캔들 표기</div>
+        <p>아래 모든 도식은 한국 관행(<span class="c-rise">상승=빨강</span>, <span class="c-fall">하락=파랑</span>)을 따릅니다. 반전 패턴은 보라색 <span class="pc-tag rev" style="display:inline">반전</span>, 지속 패턴은 초록색 <span class="pc-tag cont" style="display:inline">지속</span> 태그로 구분합니다.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 01 핵심 정리</div>
+      <ul>
+        <li>몸통=승부 결과, 꼬리=거부/지켜낸 가격, 갭=감정의 점프.</li>
+        <li>같은 모양도 <b>위치·추세</b>에 따라 의미가 달라진다.</li>
+        <li>패턴 출현은 신호일 뿐, <b>확인봉</b>으로 검증하라.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section class="part" id="part-2">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 02</span><span class="of">/ 08</span></div>
+      <h2>단일 캔들 ① 강도와 지속</h2>
+      <p class="part-sub">캔들 하나만으로도 '이 기간 누가 이겼는가, 얼마나 강했는가'를 읽을 수 있습니다. 추세의 힘을 보여주는 캔들들입니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>마루보즈 — 그림자 없는 압도</h3>
+      <p><span class="term">마루보즈 <span class="en">marubozu</span></span>는 꼬리가 거의 없는 캔들입니다. 시가부터 종가까지 한 방향으로 밀어붙여, 장중 내내 한쪽 세력이 완전히 압도했다는 가장 강한 신호입니다.</p>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <rect x="14" y="8" width="28" height="104" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">양 마루보즈 <span class="en">bullish marubozu</span></div>
+          <div class="pc-meta"><span class="pc-tag bull">강세</span><span class="pc-tag cont">지속</span><span class="pc-tag">꼬리 없음</span></div>
+          <div class="pc-desc">시가=저가, 종가=고가. 시작부터 끝까지 매수세가 단 한 번의 후퇴 없이 밀어올림. <b>강한 상승 지속·돌파 신호.</b></div>
+        </div>
+      </div>
+      <div class="pcard top">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <rect x="14" y="8" width="28" height="104" class="dn-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">음 마루보즈 <span class="en">bearish marubozu</span></div>
+          <div class="pc-meta"><span class="pc-tag bear">약세</span><span class="pc-tag cont">지속</span><span class="pc-tag">꼬리 없음</span></div>
+          <div class="pc-desc">시가=고가, 종가=저가. 매도세가 반등 한 번 없이 짓누름. <b>강한 하락 지속 신호</b>, 지지선 붕괴 시 특히 위협적.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>벨트홀드 — 개장에서의 선제공격</h3>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <line x1="28" y1="14" x2="28" y2="24" class="up-stroke"/>
+            <rect x="14" y="24" width="28" height="88" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">상승 벨트홀드 <span class="en">bullish belt hold</span></div>
+          <div class="pc-meta"><span class="pc-tag bull">강세</span><span class="pc-tag rev">반전</span><span class="pc-tag">아랫꼬리 없음</span></div>
+          <div class="pc-desc">저가에서 출발(아랫꼬리 없음)해 강하게 상승 마감. 하락 추세 바닥에서 나오면 <b>반전 신호</b>. 윗꼬리가 짧을수록 강함.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">03</span>스피닝탑 — 망설임의 신호</h3>
+      <div class="pcard neutral">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <line x1="28" y1="10" x2="28" y2="46" stroke="#6A7180" stroke-width="1.6"/>
+            <line x1="28" y1="74" x2="28" y2="112" stroke="#6A7180" stroke-width="1.6"/>
+            <rect x="14" y="46" width="28" height="28" fill="#6A7180" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">스피닝탑 <span class="en">spinning top</span></div>
+          <div class="pc-meta"><span class="pc-tag neu">중립</span><span class="pc-tag rev">전환 암시</span><span class="pc-tag">양쪽 꼬리</span></div>
+          <div class="pc-desc">짧은 몸통과 양쪽의 긴 꼬리. 위아래로 출렁였지만 결국 제자리 — <b>힘의 균형, 추세 피로</b>를 뜻함. 강한 추세 끝에 나오면 전환 경계 신호.</div>
+        </div>
+      </div>
+      <div class="callout co-warn">
+        <div class="co-label">강도형 캔들의 함정</div>
+        <p>장대봉·마루보즈가 '너무 멀리' 가면 그 자체가 단기 과열 신호가 되어 다음 날 되돌림(차익실현)을 부르기도 합니다. 강한 캔들 = 무조건 추격이 아니라, <strong>거래량과 위치</strong>를 함께 보고 판단하세요.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 02 핵심 정리</div>
+      <ul>
+        <li><b>마루보즈</b>: 꼬리 없는 압도 — 가장 강한 지속 신호.</li>
+        <li><b>벨트홀드</b>: 개장가에서 선제공격, 추세 끝에선 반전 단서.</li>
+        <li><b>스피닝탑</b>: 짧은 몸통+양 꼬리=망설임. 추세 끝의 피로 신호.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section class="part" id="part-3">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 03</span><span class="of">/ 08</span></div>
+      <h2>단일 캔들 ② 반전 신호</h2>
+      <p class="part-sub">도지와 꼬리 달린 캔들들은 추세의 끝을 알리는 '경고등'입니다. 모양은 같아도 위치에 따라 이름과 의미가 갈립니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>도지 4형제 — 균형과 전환</h3>
+      <p><span class="term">도지 <span class="en">doji</span></span>는 시가와 종가가 거의 같아 몸통이 선처럼 얇은 캔들입니다. 매수·매도가 팽팽히 맞선 '결정 보류'의 신호로, 강한 추세 끝에 나오면 전환 경고가 됩니다. 꼬리의 위치에 따라 넷으로 나뉩니다.</p>
+      <div class="figure">
+        <div class="cndrow">
+          <div class="unit">
+            <svg width="50" height="118" viewBox="0 0 50 118">
+              <line x1="25" y1="8" x2="25" y2="110" stroke="#6A7180" stroke-width="1.6"/>
+              <rect x="10" y="56" width="30" height="5" fill="#6A7180" rx="1"/>
+            </svg>
+            <div class="nm neu">표준 도지</div>
+            <div class="ds">상하 균등, 완전한 균형</div>
+          </div>
+          <div class="unit">
+            <svg width="50" height="118" viewBox="0 0 50 118">
+              <line x1="25" y1="8" x2="25" y2="100" stroke="#6A7180" stroke-width="1.6"/>
+              <rect x="10" y="100" width="30" height="5" fill="#6A7180" rx="1"/>
+            </svg>
+            <div class="nm down">비석 도지</div>
+            <div class="ds">긴 윗꼬리, 천장 반전 ↓</div>
+          </div>
+          <div class="unit">
+            <svg width="50" height="118" viewBox="0 0 50 118">
+              <line x1="25" y1="18" x2="25" y2="110" stroke="#6A7180" stroke-width="1.6"/>
+              <rect x="10" y="14" width="30" height="5" fill="#6A7180" rx="1"/>
+            </svg>
+            <div class="nm up">잠자리 도지</div>
+            <div class="ds">긴 아랫꼬리, 바닥 반전 ↑</div>
+          </div>
+          <div class="unit">
+            <svg width="50" height="118" viewBox="0 0 50 118">
+              <line x1="25" y1="8" x2="25" y2="48" stroke="#6A7180" stroke-width="1.6"/>
+              <line x1="25" y1="70" x2="25" y2="110" stroke="#6A7180" stroke-width="1.6"/>
+              <rect x="10" y="56" width="30" height="5" fill="#6A7180" rx="1"/>
+            </svg>
+            <div class="nm neu">롱레그 도지</div>
+            <div class="ds">상하 모두 긴 꼬리, 극심한 혼조</div>
+          </div>
+        </div>
+        <div class="figure-cap">도지 4종 — 꼬리 위치가 천장·바닥의 방향을 암시한다</div>
+      </div>
+      <div class="callout co-note">
+        <div class="co-label">비석 vs 잠자리 기억법</div>
+        <p><strong>비석(⊤)</strong>은 묘비 모양 — 위로 솟았다 떨어져 죽은 형국, 천장에서 <span class="c-fall">하락</span>. <strong>잠자리(⊥)</strong>는 아래로 내려갔다 떠오른 형국, 바닥에서 <span class="c-rise">상승</span>.</p>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>해머 계열 — 꼬리로 되돌린 캔들</h3>
+      <p>작은 몸통과 한쪽의 긴 꼬리로 이뤄진 반전 캔들들입니다. 핵심은 <strong>나온 위치</strong>입니다. 모양이 같아도 바닥이면 상승 반전, 천장이면 하락 반전으로 정반대 의미가 됩니다.</p>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <line x1="28" y1="14" x2="28" y2="22" class="up-stroke"/>
+            <rect x="14" y="22" width="28" height="22" class="up-fill" rx="2"/>
+            <line x1="28" y1="44" x2="28" y2="112" class="up-stroke"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">망치형 <span class="en">hammer</span> · 교수형 <span class="en">hanging man</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">바닥=망치 ↑</span><span class="pc-tag bear">천장=교수형 ↓</span></div>
+          <div class="pc-desc">작은 몸통 + 긴 아랫꼬리. 장중 깊이 밀렸다가 끝에서 회복. <b>바닥에서 나오면 망치형(상승 반전)</b>, 같은 모양이 <b>천장에서 나오면 교수형(하락 반전)</b>.</div>
+        </div>
+      </div>
+      <div class="pcard top">
+        <div class="pc-svg">
+          <svg width="56" height="120" viewBox="0 0 56 120">
+            <line x1="28" y1="8" x2="28" y2="76" class="dn-stroke"/>
+            <rect x="14" y="76" width="28" height="22" class="dn-fill" rx="2"/>
+            <line x1="28" y1="98" x2="28" y2="106" class="dn-stroke"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">역망치형 <span class="en">inverted hammer</span> · 유성형 <span class="en">shooting star</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">바닥=역망치 ↑</span><span class="pc-tag bear">천장=유성 ↓</span></div>
+          <div class="pc-desc">작은 몸통 + 긴 윗꼬리. 위로 솟구쳤다 밀려 내려옴. <b>바닥에서는 역망치형(상승 시도)</b>, <b>천장에서는 유성형(하락 반전)</b>. 둘 다 다음 봉의 확인이 특히 중요.</div>
+        </div>
+      </div>
+      <div class="callout co-warn">
+        <div class="co-label">전문가의 분별</div>
+        <p>망치·교수형·역망치·유성은 <strong>모양이 둘뿐</strong>(아랫꼬리형 / 윗꼬리형)이고, 나머지는 전부 '위치'로 갈립니다. 초보는 모양 4개를 외우지만, 전문가는 "긴 꼬리가 어느 쪽? 추세의 어디?" 두 질문으로 즉시 분류합니다.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 03 핵심 정리</div>
+      <ul>
+        <li><b>도지</b>: 비석(천장↓)·잠자리(바닥↑)·표준·롱레그. 추세 끝에서 전환 경고.</li>
+        <li>긴 아랫꼬리=망치/교수형, 긴 윗꼬리=역망치/유성. <b>위치가 방향을 정한다.</b></li>
+        <li>꼬리 캔들은 단독보다 <b>확인봉</b>과 함께.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section class="part" id="part-4">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 04</span><span class="of">/ 08</span></div>
+      <h2>2봉 패턴</h2>
+      <p class="part-sub">캔들 두 개의 관계는 단일 캔들보다 또렷한 이야기를 만듭니다. 반전을 알리는 대표 2봉 조합들입니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>장악형 vs 잉태형 — 정반대의 형제</h3>
+      <p><span class="term">장악형 <span class="en">engulfing</span></span>은 둘째 캔들이 첫째를 <strong>삼키는</strong> 강한 반전, <span class="term">잉태형 <span class="en">harami</span></span>은 둘째가 첫째 몸통 <strong>안에 잉태되듯 들어가는</strong> 추세 둔화·반전 신호입니다. 배치가 정확히 반대입니다.</p>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="78" height="120" viewBox="0 0 78 120">
+            <line x1="26" y1="34" x2="26" y2="46" class="dn-stroke"/><line x1="26" y1="82" x2="26" y2="94" class="dn-stroke"/>
+            <rect x="14" y="46" width="24" height="36" class="dn-fill" rx="2"/>
+            <line x1="56" y1="20" x2="56" y2="34" class="up-stroke"/><line x1="56" y1="100" x2="56" y2="112" class="up-stroke"/>
+            <rect x="44" y="34" width="24" height="66" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">상승 장악형 <span class="en">bullish engulfing</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">강세</span><span class="pc-tag">바닥</span></div>
+          <div class="pc-desc">작은 음봉을 큰 양봉이 완전히 덮음. 매도세를 매수세가 압도적으로 역전 — <b>신뢰도 높은 바닥 반전</b>. 거래량이 실리면 더 강력.</div>
+        </div>
+      </div>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="78" height="120" viewBox="0 0 78 120">
+            <line x1="26" y1="16" x2="26" y2="28" class="dn-stroke"/><line x1="26" y1="94" x2="26" y2="106" class="dn-stroke"/>
+            <rect x="14" y="28" width="24" height="66" class="dn-fill" rx="2"/>
+            <line x1="56" y1="44" x2="56" y2="54" class="up-stroke"/><line x1="56" y1="80" x2="56" y2="90" class="up-stroke"/>
+            <rect x="44" y="54" width="24" height="26" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">상승 잉태형 <span class="en">bullish harami</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">강세</span><span class="pc-tag">바닥</span></div>
+          <div class="pc-desc">큰 음봉 뒤 작은 양봉이 그 몸통 <b>안에</b> 들어옴. 하락 모멘텀이 갑자기 멎음 — 반전 '예고'. 둘째가 도지면 <b>잉태십자(harami cross)</b>로 신뢰도가 더 높아짐.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>관통형 vs 먹구름 — 절반의 침투</h3>
+      <p>두 캔들이 겹치되 둘째가 첫째 몸통의 <strong>절반 이상</strong>을 되돌리는 패턴입니다. 장악형보다는 약하지만 의미 있는 반전 신호로 봅니다.</p>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="78" height="120" viewBox="0 0 78 120">
+            <line x1="26" y1="16" x2="26" y2="26" class="dn-stroke"/><line x1="26" y1="92" x2="26" y2="102" class="dn-stroke"/>
+            <rect x="14" y="26" width="24" height="66" class="dn-fill" rx="2"/>
+            <line x1="56" y1="36" x2="56" y2="46" class="up-stroke"/><line x1="56" y1="108" x2="56" y2="116" class="up-stroke"/>
+            <rect x="44" y="46" width="24" height="62" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">관통형 <span class="en">piercing line</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">강세</span><span class="pc-tag">바닥</span></div>
+          <div class="pc-desc">음봉 뒤, 양봉이 갭하락 출발했다가 <b>전봉 몸통의 절반 위로</b> 회복 마감. 매수세의 반격 성공. 절반을 넘을수록(완전히 넘으면 장악형) 강함.</div>
+        </div>
+      </div>
+      <div class="pcard top">
+        <div class="pc-svg">
+          <svg width="78" height="120" viewBox="0 0 78 120">
+            <line x1="26" y1="14" x2="26" y2="24" class="up-stroke"/><line x1="26" y1="90" x2="26" y2="100" class="up-stroke"/>
+            <rect x="14" y="24" width="24" height="66" class="up-fill" rx="2"/>
+            <line x1="56" y1="8" x2="56" y2="18" class="dn-stroke"/><line x1="56" y1="78" x2="56" y2="88" class="dn-stroke"/>
+            <rect x="44" y="18" width="24" height="60" class="dn-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">먹구름형 <span class="en">dark cloud cover</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bear">약세</span><span class="pc-tag">천장</span></div>
+          <div class="pc-desc">양봉 뒤, 음봉이 갭상승 출발했다가 <b>전봉 몸통의 절반 아래로</b> 무너져 마감. 천장에서 매수세가 꺾이는 신호. 관통형의 거울상.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">03</span>집게형 — 같은 가격의 벽</h3>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="78" height="120" viewBox="0 0 78 120">
+            <line x1="26" y1="40" x2="26" y2="52" class="dn-stroke"/>
+            <rect x="14" y="52" width="24" height="40" class="dn-fill" rx="2"/>
+            <line x1="26" y1="92" x2="26" y2="104" class="dn-stroke"/>
+            <line x1="56" y1="60" x2="56" y2="72" class="up-stroke"/>
+            <rect x="44" y="60" width="24" height="32" class="up-fill" rx="2"/>
+            <line x1="56" y1="92" x2="56" y2="104" class="up-stroke"/>
+            <line x1="8" y1="104" x2="74" y2="104" stroke="#A9791A" stroke-width="1.4" stroke-dasharray="4 3"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">집게 바닥 <span class="en">tweezers bottom</span></div>
+          <div class="pc-meta"><span class="pc-tag rev">반전</span><span class="pc-tag bull">강세</span><span class="pc-tag">바닥</span></div>
+          <div class="pc-desc">두 캔들이 <b>똑같은 저가</b>를 두 번 찍고 더 못 내려감(점선). 그 가격대가 단단한 지지임을 확인 — 바닥 반전 단서. 천장에서 같은 고가를 찍으면 <b>집게 천장</b>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 04 핵심 정리</div>
+      <ul>
+        <li><b>장악형</b>(삼킴)=강한 반전, <b>잉태형</b>(안에 들어감)=둔화·예고. 십자면 더 강함.</li>
+        <li><b>관통형/먹구름</b>: 전봉 몸통 절반 이상 침투 — 중급 강도의 반전.</li>
+        <li><b>집게형</b>: 동일 고/저가 반복 = 지지·저항 확인.</li>
+      </ul>
+    </div>
+  </section>
+  <!-- ============ PART 5 ============ -->
+  <section class="part" id="part-5">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 05</span><span class="of">/ 08</span></div>
+      <h2>3봉 패턴</h2>
+      <p class="part-sub">세 캔들의 조합은 가장 신뢰받는 캔들 신호 축에 듭니다. 전환의 '별'과 지속의 '행렬'을 봅니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>샛별·석별 — 별을 낀 전환</h3>
+      <p>큰 캔들 → 작은 몸통(별) → 반대 방향 큰 캔들의 3단 구성입니다. 가운데 '별'은 추세의 동력이 소진되는 분기점이며, 별이 갭을 동반하거나 도지일수록 신뢰도가 높습니다.</p>
+      <div class="figure">
+        <div class="fig2">
+          <div class="col">
+            <div class="ttl up">샛별 (바닥 ↑)</div>
+            <svg class="chart-svg" style="max-width:220px" width="220" height="150" viewBox="0 0 220 150">
+              <line x1="50" y1="28" x2="50" y2="40" class="dn-stroke"/><line x1="50" y1="92" x2="50" y2="104" class="dn-stroke"/>
+              <rect x="38" y="40" width="24" height="52" class="dn-fill" rx="2"/>
+              <line x1="110" y1="108" x2="110" y2="116" stroke="#6A7180" stroke-width="1.5"/><line x1="110" y1="126" x2="110" y2="134" stroke="#6A7180" stroke-width="1.5"/>
+              <rect x="100" y="116" width="20" height="10" fill="#6A7180" rx="1"/>
+              <line x1="170" y1="22" x2="170" y2="34" class="up-stroke"/><line x1="170" y1="86" x2="170" y2="98" class="up-stroke"/>
+              <rect x="158" y="34" width="24" height="52" class="up-fill" rx="2"/>
+            </svg>
+            <p style="font-size:13px;color:var(--ink-soft);margin:8px 0 0">큰 음봉 → 별 → 큰 양봉</p>
+          </div>
+          <div class="col">
+            <div class="ttl down">석별 (천장 ↓)</div>
+            <svg class="chart-svg" style="max-width:220px" width="220" height="150" viewBox="0 0 220 150">
+              <line x1="50" y1="98" x2="50" y2="110" class="up-stroke"/><line x1="50" y1="34" x2="50" y2="46" class="up-stroke"/>
+              <rect x="38" y="46" width="24" height="52" class="up-fill" rx="2"/>
+              <line x1="110" y1="16" x2="110" y2="24" stroke="#6A7180" stroke-width="1.5"/><line x1="110" y1="34" x2="110" y2="42" stroke="#6A7180" stroke-width="1.5"/>
+              <rect x="100" y="24" width="20" height="10" fill="#6A7180" rx="1"/>
+              <line x1="170" y1="40" x2="170" y2="52" class="dn-stroke"/><line x1="170" y1="104" x2="170" y2="116" class="dn-stroke"/>
+              <rect x="158" y="52" width="24" height="52" class="dn-fill" rx="2"/>
+            </svg>
+            <p style="font-size:13px;color:var(--ink-soft);margin:8px 0 0">큰 양봉 → 별 → 큰 음봉</p>
+          </div>
+        </div>
+        <div class="figure-cap">샛별·석별 — 가운데 별이 도지면 '도지스타'로 신뢰도 상승</div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>적삼병·흑삼병 — 지속의 행렬</h3>
+      <div class="pcard bottom">
+        <div class="pc-svg">
+          <svg width="78" height="100" viewBox="0 0 78 100">
+            <line x1="18" y1="56" x2="18" y2="62" class="up-stroke"/><line x1="18" y1="86" x2="18" y2="92" class="up-stroke"/>
+            <rect x="9" y="62" width="18" height="24" class="up-fill" rx="2"/>
+            <line x1="39" y1="38" x2="39" y2="44" class="up-stroke"/><line x1="39" y1="68" x2="39" y2="74" class="up-stroke"/>
+            <rect x="30" y="44" width="18" height="24" class="up-fill" rx="2"/>
+            <line x1="60" y1="20" x2="60" y2="26" class="up-stroke"/><line x1="60" y1="50" x2="60" y2="56" class="up-stroke"/>
+            <rect x="51" y="26" width="18" height="24" class="up-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">적삼병 <span class="en">three white soldiers</span></div>
+          <div class="pc-meta"><span class="pc-tag cont">지속</span><span class="pc-tag bull">강세</span><span class="pc-tag">바닥 탈출</span></div>
+          <div class="pc-desc">양봉 셋이 계단처럼 전진. 매수세가 꾸준히 우위 — 바닥권에서 나오면 강한 <b>상승 전환·지속</b>. 단, 꼬리가 길어지고 몸통이 줄면 과열 경계.</div>
+        </div>
+      </div>
+      <div class="pcard top">
+        <div class="pc-svg">
+          <svg width="78" height="100" viewBox="0 0 78 100">
+            <line x1="18" y1="14" x2="18" y2="20" class="dn-stroke"/><line x1="18" y1="44" x2="18" y2="50" class="dn-stroke"/>
+            <rect x="9" y="20" width="18" height="24" class="dn-fill" rx="2"/>
+            <line x1="39" y1="32" x2="39" y2="38" class="dn-stroke"/><line x1="39" y1="62" x2="39" y2="68" class="dn-stroke"/>
+            <rect x="30" y="38" width="18" height="24" class="dn-fill" rx="2"/>
+            <line x1="60" y1="50" x2="60" y2="56" class="dn-stroke"/><line x1="60" y1="80" x2="60" y2="86" class="dn-stroke"/>
+            <rect x="51" y="56" width="18" height="24" class="dn-fill" rx="2"/>
+          </svg>
+        </div>
+        <div class="pc-body">
+          <div class="pc-name">흑삼병 (세 까마귀) <span class="en">three black crows</span></div>
+          <div class="pc-meta"><span class="pc-tag cont">지속</span><span class="pc-tag bear">약세</span><span class="pc-tag">천장 붕괴</span></div>
+          <div class="pc-desc">음봉 셋이 계단처럼 하락. 천장권에서 나오면 강한 <b>하락 전환·지속</b> 신호. 한국 시장에서 흔히 '투매'의 초입에 등장.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">03</span>상승·하락 삼법 — 숨 고르기 후 분출</h3>
+      <p><span class="term">삼법 <span class="en">three methods</span></span>은 대표적인 <strong>지속형</strong> 5봉 패턴입니다. 큰 캔들 뒤 작은 반대색 캔들 셋이 그 범위 안에서 조정받다가, 마지막 큰 캔들이 추세를 재개합니다. "추세는 잠시 쉴 뿐, 꺾이지 않았다"는 메시지입니다.</p>
+      <div class="figure">
+        <div class="fig2">
+          <div class="col">
+            <div class="ttl up">상승 삼법</div>
+            <svg class="chart-svg" style="max-width:240px" width="240" height="140" viewBox="0 0 240 140">
+              <line x1="30" y1="20" x2="30" y2="30" class="up-stroke"/><line x1="30" y1="110" x2="30" y2="120" class="up-stroke"/>
+              <rect x="18" y="30" width="24" height="80" class="up-fill" rx="2"/>
+              <rect x="78" y="44" width="16" height="20" class="dn-fill" rx="1"/>
+              <rect x="110" y="52" width="16" height="20" class="dn-fill" rx="1"/>
+              <rect x="142" y="60" width="16" height="20" class="dn-fill" rx="1"/>
+              <line x1="200" y1="10" x2="200" y2="20" class="up-stroke"/><line x1="200" y1="116" x2="200" y2="126" class="up-stroke"/>
+              <rect x="188" y="20" width="24" height="96" class="up-fill" rx="2"/>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="ttl down">하락 삼법</div>
+            <svg class="chart-svg" style="max-width:240px" width="240" height="140" viewBox="0 0 240 140">
+              <line x1="30" y1="20" x2="30" y2="30" class="dn-stroke"/><line x1="30" y1="110" x2="30" y2="120" class="dn-stroke"/>
+              <rect x="18" y="30" width="24" height="80" class="dn-fill" rx="2"/>
+              <rect x="78" y="74" width="16" height="20" class="up-fill" rx="1"/>
+              <rect x="110" y="66" width="16" height="20" class="up-fill" rx="1"/>
+              <rect x="142" y="58" width="16" height="20" class="up-fill" rx="1"/>
+              <line x1="200" y1="14" x2="200" y2="24" class="dn-stroke"/><line x1="200" y1="120" x2="200" y2="130" class="dn-stroke"/>
+              <rect x="188" y="24" width="24" height="96" class="dn-fill" rx="2"/>
+            </svg>
+          </div>
+        </div>
+        <div class="figure-cap">삼법 — 작은 조정 캔들 셋이 큰 첫 캔들 범위를 벗어나지 않는 것이 조건</div>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 05 핵심 정리</div>
+      <ul>
+        <li><b>샛별·석별</b>: 큰 봉–별–반대 큰 봉. 별이 도지/갭이면 신뢰도↑.</li>
+        <li><b>적삼병·흑삼병</b>: 같은 방향 3봉 행렬 = 강한 전환·지속.</li>
+        <li><b>삼법</b>: 조정 3봉이 첫 봉 범위 안 → 추세 재개(지속형).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 6 ============ -->
+  <section class="part" id="part-6">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 06</span><span class="of">/ 08</span></div>
+      <h2>창(갭) 이론</h2>
+      <p class="part-sub">캔들과 캔들 사이의 '빈 공간'은 그 자체로 강력한 신호입니다. 일본식 캔들 분석에서는 이를 '창(窓)'이라 부릅니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>창이란 무엇인가</h3>
+      <p><span class="term">창 <span class="en">window / gap</span></span>은 전봉의 고가와 당봉의 저가(상승갭), 또는 전봉의 저가와 당봉의 고가(하락갭) 사이에 가격이 한 번도 거래되지 않은 빈 구간입니다. 장 마감 후 강한 재료로 시가가 점프할 때 생깁니다.</p>
+      <div class="figure">
+        <svg class="chart-svg" style="max-width:360px" width="320" height="180" viewBox="0 0 320 180">
+          <!-- candle 1 (up) low region -->
+          <line x1="90" y1="96" x2="90" y2="108" class="up-stroke"/><line x1="90" y1="150" x2="90" y2="162" class="up-stroke"/>
+          <rect x="74" y="108" width="32" height="42" class="up-fill" rx="2"/>
+          <!-- gap band -->
+          <rect x="40" y="70" width="240" height="26" fill="#C9962A" opacity="0.12"/>
+          <line x1="40" y1="96" x2="280" y2="96" stroke="#A9791A" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <line x1="40" y1="70" x2="280" y2="70" stroke="#A9791A" stroke-width="1.2" stroke-dasharray="4 3"/>
+          <text x="40" y="54" class="lbl-w">창 (gap)</text>
+          <!-- candle 2 (up) higher -->
+          <line x1="210" y1="18" x2="210" y2="30" class="up-stroke"/><line x1="210" y1="62" x2="210" y2="74" class="up-stroke"/>
+          <rect x="194" y="30" width="32" height="40" class="up-fill" rx="2"/>
+        </svg>
+        <div class="figure-cap">상승 창 — 전봉 고가와 당봉 저가 사이가 비어 점프</div>
+      </div>
+      <div class="callout co-note">
+        <div class="co-label">창의 지지·저항화</div>
+        <p>일본식 격언에 "창은 메워진다"는 말이 있습니다. 가격이 되돌아와 창을 메우려는 경향이 있지만, <strong>메우지 못하고 버티면 그 창이 강력한 지지(상승갭)·저항(하락갭)</strong>으로 작동합니다. 창을 메우는지 여부를 추적하는 것이 핵심입니다.</p>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>위치로 구분하는 4가지 갭</h3>
+      <p>같은 갭이라도 추세의 어디에서 났는지에 따라 의미가 완전히 다릅니다. 이 구분이 전문가와 초보를 가릅니다.</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>갭 종류</th><th>위치</th><th>의미</th></tr></thead>
+          <tbody>
+            <tr><td><strong>보통 갭</strong><br><span class="en">common</span></td><td>횡보·박스권 내부</td><td>의미가 약하고 대개 곧 메워짐. 무시 가능.</td></tr>
+            <tr><td><strong>돌파 갭</strong><br><span class="en">breakaway</span></td><td>박스권·패턴 돌파 지점</td><td>새 추세의 출발. 거래량 동반 시 신뢰도 높음. 잘 안 메워짐.</td></tr>
+            <tr><td><strong>계속 갭</strong><br><span class="en">runaway</span></td><td>추세 진행 중간</td><td>추세에 가속이 붙음. 추세의 약 중간 지점이라 '측정 갭'으로도 불림.</td></tr>
+            <tr><td><strong>소멸 갭</strong><br><span class="en">exhaustion</span></td><td>추세의 막바지</td><td>마지막 과열·투매. 곧 반전 가능성 — 갭이 빠르게 메워지면 경고.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout co-warn">
+        <div class="co-label">한국 시장의 갭은 흔하다</div>
+        <p>한국 주식은 동시호가로 시초가가 결정되고 ±30% 가격제한폭이 있어, 밤사이 미국 시장·뉴스의 영향으로 <strong>시가 갭이 매우 자주</strong> 발생합니다. 갭상승 출발에 추격 매수했다가 장중 메워지며 음봉으로 마감하는 '갭 채우기'에 물리는 경우가 흔하니 주의하세요. (가격제한폭 등 제도 수치는 변동될 수 있어 KRX 확인이 필요합니다.)</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 06 핵심 정리</div>
+      <ul>
+        <li><b>창(갭)</b>=미체결 빈 구간. 메우면 약화, 못 메우면 강한 지지/저항.</li>
+        <li>위치별: 보통(무의미)·돌파(추세 시작)·계속(가속·중간)·소멸(막바지 경고).</li>
+        <li>한국은 동시호가·해외 영향으로 <b>시가 갭이 잦다</b> — 갭 추격 주의.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 7 ============ -->
+  <section class="part" id="part-7">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 07</span><span class="of">/ 08</span></div>
+      <h2>신뢰도를 높이는 법</h2>
+      <p class="part-sub">같은 패턴도 어떤 조건에서 나오느냐에 따라 적중률이 크게 달라집니다. 전문가는 패턴을 '단독'이 아니라 '겹침(confluence)'으로 씁니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>신뢰도를 끌어올리는 5가지 조건</h3>
+      <ol class="steps">
+        <li><strong>위치</strong> — 의미 있는 지지·저항, 추세선, 이동평균선 위에서 나온 패턴일수록 강하다.</li>
+        <li><strong>추세 맥락</strong> — 반전 패턴은 충분히 진행된 추세 끝에서 나와야 의미가 있다.</li>
+        <li><strong>거래량</strong> — 반전·돌파 캔들에 거래량이 실리면 세력의 실재를 방증한다.</li>
+        <li><strong>확인봉</strong> — 패턴 다음 봉이 방향을 지지하면 신뢰도가 크게 오른다.</li>
+        <li><strong>캔들 크기</strong> — 장악·삼병 등은 몸통이 클수록, 꼬리가 의미 있을수록 강하다.</li>
+      </ol>
+      <div class="callout co-fall">
+        <div class="co-label">컨플루언스(confluence)</div>
+        <p>예: "60일선 지지 + 거래량 급증 + 상승 장악형 + 다음 날 양봉 확인"이 한 자리에서 겹치면, 각각 따로일 때보다 훨씬 신뢰할 만한 매수 자리가 됩니다. <strong>신호 하나가 아니라 신호들의 교집합</strong>을 노리세요.</p>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>다중 시간프레임으로 검증</h3>
+      <p>일봉에서 멋진 반전 패턴이 떠도, 주봉 추세가 강한 하락이면 그 신호는 단기 반등에 그칠 수 있습니다. <strong>큰 시간(주봉)으로 방향을, 작은 시간(일봉·분봉)으로 진입 타이밍을</strong> 잡는 이중 확인이 캔들 신호의 질을 높입니다.</p>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">03</span>진입·청산 규칙과 결합</h3>
+      <div class="psy">
+        <div class="cell"><div class="ph">진입</div><div class="pt"><b>확인봉 마감 후</b> 또는 패턴 고점·저점 돌파 시.</div></div>
+        <div class="cell"><div class="ph">손절</div><div class="pt">패턴이 부정되는 자리(예: 망치형 저가 이탈) <b>바로 아래/위</b>.</div></div>
+        <div class="cell"><div class="ph">목표</div><div class="pt">직전 지지·저항, 또는 패턴 크기만큼 <b>측정 투영</b>.</div></div>
+      </div>
+      <p>패턴은 '진입의 근거'일 뿐, 손절·목표가 없는 패턴 매매는 도박에 가깝습니다. 신호와 위험관리는 항상 한 세트입니다.</p>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 07 핵심 정리</div>
+      <ul>
+        <li>신뢰도 = <b>위치·추세·거래량·확인봉·크기</b>의 겹침(confluence).</li>
+        <li>주봉으로 방향, 일·분봉으로 타이밍 — <b>다중 시간프레임</b> 검증.</li>
+        <li>패턴은 진입 근거일 뿐, <b>손절·목표</b>와 한 세트로만 쓴다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 8 ============ -->
+  <section class="part" id="part-8">
+    <div class="part-head">
+      <div class="part-kicker"><span class="num">PART 08</span><span class="of">/ 08</span></div>
+      <h2>함정과 현실 — 전문가의 균형 감각</h2>
+      <p class="part-sub">캔들 분석의 진짜 실력은 패턴을 많이 아는 것이 아니라, 그것을 '얼마나 의심할 줄 아는가'에서 나옵니다.</p>
+      <div class="part-rule"></div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">01</span>통계적 현실 — 마법은 없다</h3>
+      <p>캔들 패턴의 적중률을 검증한 연구들(예: 토머스 불코프스키의 패턴 통계 작업 등)은 대체로 <strong>패턴이 주는 우위가 존재하더라도 그 폭은 크지 않고, 시장·기간·검증 방식에 따라 흔들린다</strong>는 결론에 가깝습니다. "이 패턴이 뜨면 몇 % 확률로 오른다"는 식의 단정적 수치는 출처와 조건을 함께 확인하지 않으면 신뢰하기 어렵습니다. 캔들은 확률을 약간 기울이는 도구지, 승률 보장 장치가 아닙니다.</p>
+      <div class="callout co-warn">
+        <div class="co-label">전문가가 경계하는 4가지</div>
+        <p><strong>① 사후 확신</strong> — 지나간 차트엔 모든 패턴이 보인다. 실시간은 다르다. <strong>② 패턴 실패(failed pattern)</strong> — 신호가 부정되는 순간이 오히려 강한 반대 신호다(손절 후 추세 추종). <strong>③ 과최적화</strong> — 패턴을 너무 잘게 외워 끼워 맞추면 노이즈를 신호로 착각한다. <strong>④ 단독 신호 베팅</strong> — 컨플루언스 없는 단일 캔들에 큰돈을 걸지 않는다.</p>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">02</span>한국 시장 특유의 왜곡 변수</h3>
+      <ul>
+        <li><strong>동시호가</strong> — 시·종가가 단일가로 결정돼, 마감 직전 허수성 주문이 캔들 모양을 인위적으로 만들 수 있다.</li>
+        <li><strong>VI·서킷브레이커</strong> — 급변 시 거래가 멈춰 캔들의 연속성이 끊긴다.</li>
+        <li><strong>±30% 가격제한폭</strong> — 상·하한가에 갇히면 그날 캔들이 비정상적으로 잘린다. (제도 수치는 변동 가능)</li>
+        <li><strong>품절주·저유동성주</strong> — 거래가 적은 종목은 캔들 한두 개로 모양이 쉽게 조작된다.</li>
+        <li><strong>야간 해외 변수</strong> — 미국 증시·환율로 시가 갭이 잦아, 갭 관련 패턴 해석에 주의가 필요하다.</li>
+      </ul>
+      <div class="callout co-note">
+        <div class="co-label">함께 보면 좋은 강좌</div>
+        <p>제도적 변수(동시호가·VI·가격제한폭)의 상세는 <a href="stock-course.html#part-2" style="color:var(--fall);text-decoration:underline">입문 강좌</a>, 추세·보조지표와의 결합은 <a href="chart-course.html" style="color:var(--fall);text-decoration:underline">차트 분석 강좌</a>, 용어는 <a href="stock-glossary.html" style="color:var(--fall);text-decoration:underline">용어 해설집</a>에서 확인하세요.</p>
+      </div>
+    </div>
+
+    <div class="lesson">
+      <h3><span class="dot">03</span>전문가의 한 문장</h3>
+      <p>캔들은 <strong>시장 참여자의 심리를 압축한 언어</strong>입니다. 패턴의 이름을 외우는 단계를 넘어, "이 캔들이 만들어지는 동안 매수자와 매도자 사이에 무슨 일이 있었는가"를 매번 묻는 습관이 전문가의 눈을 만듭니다. 도구는 단순할수록 좋고, 판단은 겸손할수록 오래갑니다.</p>
+      <div class="callout co-rise">
+        <div class="co-label">연습 루틴 제안</div>
+        <p>관심 종목 하나의 일봉을 매일 펼쳐, ① 오늘 캔들의 이름과 심리를 한 줄로 적고 ② 위치·거래량·확인 여부를 표시한 뒤 ③ 다음 날 실제 결과와 대조하세요. 이 '예측–검증' 일지가 캔들을 읽는 직관을 가장 빠르게 키웁니다.</p>
+      </div>
+    </div>
+
+    <div class="recap">
+      <div class="rc-label">Part 08 핵심 정리</div>
+      <ul>
+        <li>패턴의 우위는 <b>작고 조건부</b>다 — 단정적 적중률 수치는 의심하라.</li>
+        <li>경계: 사후 확신·패턴 실패·과최적화·단독 베팅.</li>
+        <li>한국 시장은 동시호가·VI·±30%·저유동성·야간 갭으로 캔들이 <b>왜곡</b>될 수 있다.</li>
+        <li>이름 암기를 넘어 <b>매수·매도 심리</b>를 읽고, 늘 위험관리와 함께.</li>
+      </ul>
+    </div>
+  </section>
+
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="disc">
+      <b>면책</b> — 이 강좌는 캔들스틱 분석의 일반 원리를 설명하는 교육 자료이며, 특정 종목·시점에 대한 투자 권유가 아닙니다. 캔들 패턴이 주는 통계적 우위는 작고 조건에 크게 좌우되며, 모든 신호는 어긋날 수 있습니다. 제도·수치(가격제한폭 등)는 변동되므로 실제 매매 전 공식 출처(KRX·각 증권사)를 확인하시기 바랍니다.
+    </div>
+    <div class="sig">
+      전문가 캔들 차트 강좌<br>
+      Candlestick Mastery · KR<br>
+      <span style="color:var(--rise)">●</span> 상승 <span style="color:var(--fall)">●</span> 하락
+    </div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<script>
+  // progress bar
+  const pbar=document.getElementById('pbar');
+  const onScroll=()=>{
+    const h=document.documentElement;
+    const max=h.scrollHeight-h.clientHeight;
+    const p=max>0?(h.scrollTop/max)*100:0;
+    pbar.style.width=p+'%';
+  };
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  // active toc via IntersectionObserver
+  const links=[...document.querySelectorAll('.toc a')];
+  const map={};
+  links.forEach(a=>map[a.getAttribute('href').slice(1)]=a);
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const a=map[e.target.id];
+        if(a)a.classList.add('active');
+      }
+    });
+  },{rootMargin:'-30% 0px -60% 0px',threshold:0});
+  document.querySelectorAll('.part').forEach(s=>obs.observe(s));
+
+  // mobile toc
+  const toc=document.getElementById('toc');
+  const scrim=document.getElementById('scrim');
+  const menuBtn=document.getElementById('menuBtn');
+  const closeToc=()=>{toc.classList.remove('open');scrim.classList.remove('show')};
+  menuBtn.addEventListener('click',()=>{toc.classList.toggle('open');scrim.classList.toggle('show')});
+  scrim.addEventListener('click',closeToc);
+  toc.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeToc));
+</script>
+</body>
+</html>

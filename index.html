@@ -6,28 +6,28 @@
 <title>STUDY DESK — 학습 자료실</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Nanum+Gothic+Coding:wght@400;700&display=swap" rel="stylesheet">
 <style>
   /* =========================================================
      색상 토큰 — 기존 자료 디자인에 맞추려면 여기 값만 바꾸세요
      (한국 시장 관례: 상승=빨강 / 하락=파랑)
      ========================================================= */
   :root {
-    --bg:        #0a0e14;
-    --bg-soft:   #11161f;
-    --panel:     #161c27;
-    --panel-hi:  #1c2433;
-    --border:    #232c3b;
-    --border-hi: #324054;
-    --text:      #e4e9f0;
-    --text-dim:  #8a96a8;
-    --text-mute: #5a6678;
-    --up:        #e2403a;   /* 상승 (빨강) */
-    --down:      #2e74e8;   /* 하락 (파랑) */
-    --accent:    #e2403a;
-    --glow:      rgba(226,64,58,0.12);
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans KR', sans-serif;
+    --bg:        #f4f2ee;
+    --bg-soft:   #ece9e3;
+    --panel:     #ffffff;
+    --panel-hi:  #fbfaf8;
+    --border:    #e0dcd4;
+    --border-hi: #c9c3b8;
+    --text:      #1d2330;
+    --text-dim:  #5e6678;
+    --text-mute: #9aa0ad;
+    --up:        #d32f2a;   /* 상승 (빨강) */
+    --down:      #1f5fd6;   /* 하락 (파랑) */
+    --accent:    #d32f2a;
+    --glow:      rgba(211,47,42,0.14);
+    --mono: 'Nanum Gothic Coding', monospace;
+    --sans: 'Nanum Gothic', sans-serif;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -37,9 +37,8 @@
   body {
     background: var(--bg);
     background-image:
-      radial-gradient(circle at 15% 0%, rgba(226,64,58,0.05), transparent 45%),
-      radial-gradient(circle at 85% 10%, rgba(46,116,232,0.05), transparent 45%),
-      linear-gradient(var(--bg), var(--bg));
+      radial-gradient(circle at 12% -5%, rgba(211,47,42,0.045), transparent 42%),
+      radial-gradient(circle at 88% 8%, rgba(31,95,214,0.045), transparent 42%);
     color: var(--text);
     font-family: var(--sans);
     font-weight: 400;
@@ -57,7 +56,7 @@
       linear-gradient(var(--border) 1px, transparent 1px),
       linear-gradient(90deg, var(--border) 1px, transparent 1px);
     background-size: 48px 48px;
-    opacity: 0.15;
+    opacity: 0.4;
     pointer-events: none;
     z-index: 0;
   }
@@ -73,7 +72,7 @@
   /* ===================== HEADER ===================== */
   header {
     padding: 56px 0 30px;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--border-hi);
   }
 
   .ticker-bar {
@@ -91,7 +90,7 @@
   .ticker-bar .dot {
     width: 7px; height: 7px; border-radius: 50%;
     background: var(--up);
-    box-shadow: 0 0 8px var(--up);
+    box-shadow: 0 0 8px var(--glow);
     animation: pulse 2s ease-in-out infinite;
   }
   @keyframes pulse { 50% { opacity: 0.35; } }
@@ -110,7 +109,7 @@
     color: var(--text-dim);
     font-size: 15px;
     max-width: 540px;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   /* ===================== TOOLBAR ===================== */
@@ -140,7 +139,7 @@
   .search input::placeholder { color: var(--text-mute); }
   .search input:focus {
     outline: none;
-    border-color: var(--border-hi);
+    border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--glow);
   }
   .search svg {
@@ -204,7 +203,8 @@
     text-decoration: none;
     color: inherit;
     overflow: hidden;
-    transition: transform 0.18s ease, border-color 0.18s, background 0.18s;
+    box-shadow: 0 1px 2px rgba(29,35,48,0.04);
+    transition: transform 0.18s ease, border-color 0.18s, box-shadow 0.18s, background 0.18s;
     opacity: 0;
     transform: translateY(14px);
     animation: rise 0.5s cubic-bezier(0.2,0.7,0.2,1) forwards;
@@ -225,6 +225,7 @@
     transform: translateY(-4px);
     border-color: var(--border-hi);
     background: var(--panel-hi);
+    box-shadow: 0 10px 28px rgba(29,35,48,0.10);
   }
   .card:hover::before { transform: scaleY(1); }
 
@@ -234,7 +235,7 @@
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-mute);
+    color: var(--text-dim);
     border: 1px solid var(--border);
     border-radius: 4px;
     padding: 3px 7px;
@@ -249,7 +250,7 @@
   .card p {
     font-size: 13.5px;
     color: var(--text-dim);
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.55;
     min-height: 42px;
   }
@@ -264,7 +265,7 @@
   }
   .card .path .arrow {
     margin-left: auto;
-    transition: transform 0.18s;
+    transition: transform 0.18s, color 0.18s;
   }
   .card:hover .path .arrow { transform: translateX(4px); color: var(--accent); }
 
@@ -281,7 +282,7 @@
   footer {
     margin-top: 70px;
     padding: 28px 0 50px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border-hi);
     font-family: var(--mono);
     font-size: 11px;
     color: var(--text-mute);

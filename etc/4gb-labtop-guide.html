@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4GB 납땜 노트북 성능 최적화 가이드</title>
+<style>
+  :root{
+    --paper:#FAF8F3;
+    --ink:#15233B;
+    --ink-soft:#3D4A5C;
+    --mute:#6B7686;
+    --line:#E4DFD3;
+    --line-soft:#EFEBE1;
+    --amber:#D9881A;
+    --amber-tint:#FBF1DF;
+    --amber-line:#EAD6AE;
+    --card:#FFFFFF;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,'D2Coding',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Pretendard','Malgun Gothic','Segoe UI',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+
+  /* ---------- HERO ---------- */
+  header{
+    border-bottom:2px solid var(--ink);
+    padding:64px 0 0;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:600;
+  }
+  h1{
+    font-size:clamp(30px,6vw,52px);
+    line-height:1.12;
+    letter-spacing:-.02em;
+    font-weight:800;
+    margin:14px 0 18px;
+  }
+  .lede{
+    font-size:17px;
+    color:var(--ink-soft);
+    max-width:60ch;
+    margin-bottom:34px;
+  }
+  /* spec plate: the thesis — the machine's constraint */
+  .plate{
+    display:flex;
+    flex-wrap:wrap;
+    gap:0;
+    border:1px solid var(--ink);
+    border-bottom:none;
+    background:var(--card);
+    transform:translateY(1px);
+  }
+  .spec{
+    flex:1 1 0;
+    min-width:140px;
+    padding:18px 22px;
+    border-right:1px solid var(--line);
+  }
+  .spec:last-child{border-right:none}
+  .spec .k{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--mute);
+  }
+  .spec .v{
+    font-family:var(--mono);
+    font-size:24px;
+    font-weight:600;
+    margin-top:4px;
+    color:var(--ink);
+  }
+  .spec.locked .v{color:var(--amber)}
+  .spec .tag{
+    display:inline-block;
+    font-size:11px;
+    margin-top:2px;
+    color:var(--mute);
+  }
+
+  /* ---------- VERDICT ---------- */
+  .verdict{
+    background:var(--ink);
+    color:var(--paper);
+    padding:30px 28px;
+    margin-top:0;
+  }
+  .verdict .label{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:8px;
+  }
+  .verdict p{font-size:17px;line-height:1.65}
+  .verdict strong{color:#fff;font-weight:700}
+
+  /* ---------- SECTIONS ---------- */
+  main{padding:0 0 80px}
+  .block{padding:54px 0 0}
+  .kicker{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--amber);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  h2{
+    font-size:clamp(22px,4vw,30px);
+    letter-spacing:-.01em;
+    font-weight:800;
+    line-height:1.2;
+  }
+  h2 + .sub{color:var(--mute);margin-top:6px;font-size:15px}
+
+  /* priority list — a real ranked sequence */
+  .rank{margin-top:30px;display:flex;flex-direction:column;gap:18px}
+  .item{
+    display:grid;
+    grid-template-columns:54px minmax(0,1fr);
+    gap:20px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:3px solid var(--amber);
+    padding:22px 24px;
+  }
+  .item .num{
+    font-family:var(--mono);
+    font-size:30px;
+    font-weight:700;
+    color:var(--amber);
+    line-height:1;
+    letter-spacing:-.04em;
+  }
+  .item h3{
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .item h3 .meta{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:500;
+    color:var(--mute);
+    margin-left:8px;
+    letter-spacing:.04em;
+  }
+  .item p{font-size:15px;color:var(--ink-soft)}
+  .item p + p{margin-top:8px}
+
+  /* mono chips for technical values / paths */
+  .chip{
+    font-family:var(--mono);
+    font-size:.86em;
+    background:var(--amber-tint);
+    border:1px solid var(--amber-line);
+    color:#8a560c;
+    padding:1px 7px;
+    border-radius:3px;
+    white-space:nowrap;
+  }
+  code{
+    font-family:var(--mono);
+    font-size:.88em;
+    background:#F1EEE6;
+    border:1px solid var(--line);
+    padding:1px 6px;
+    border-radius:3px;
+  }
+
+  /* ---------- STEP CARD (가상메모리) ---------- */
+  .panel{
+    margin-top:28px;
+    border:1px solid var(--ink);
+    background:var(--card);
+  }
+  .panel .head{
+    background:var(--ink);
+    color:var(--paper);
+    padding:14px 22px;
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.08em;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .panel .head .os{color:var(--amber);font-weight:600}
+  ol.steps{
+    list-style:none;
+    counter-reset:s;
+    padding:8px 0;
+  }
+  ol.steps li{
+    counter-increment:s;
+    display:grid;
+    grid-template-columns:34px minmax(0,1fr);
+    gap:14px;
+    padding:13px 24px;
+    border-bottom:1px solid var(--line-soft);
+    font-size:15px;
+    color:var(--ink-soft);
+    align-items:start;
+  }
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{
+    content:counter(s,decimal-leading-zero);
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:600;
+    color:var(--amber);
+    background:var(--amber-tint);
+    border:1px solid var(--amber-line);
+    border-radius:50%;
+    width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;
+    margin-top:1px;
+  }
+  ol.steps li b{color:var(--ink);font-weight:700}
+
+  /* value list (plain text, responsive) */
+  .reco{margin-top:22px}
+  .reco-head{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--mute);
+    margin-bottom:6px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .reco-head span{color:var(--amber);font-size:11px}
+  .reco-list{border-top:1px solid var(--line)}
+  .reco-row{
+    padding:14px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .reco-row dt{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.06em;
+    color:var(--mute);
+  }
+  .reco-row dd{
+    margin:5px 0 0;
+    font-size:15px;
+    color:var(--ink-soft);
+    line-height:1.55;
+  }
+  .reco-row dd b{
+    font-family:var(--mono);
+    font-size:19px;
+    font-weight:700;
+    color:var(--amber);
+    margin-right:5px;
+  }
+
+  /* callouts */
+  .note-box{
+    margin-top:20px;
+    padding:18px 22px;
+    background:var(--amber-tint);
+    border-left:3px solid var(--amber);
+    font-size:14.5px;
+    color:#6e4a10;
+  }
+  .note-box .t{font-weight:700;color:#5a3c0a;display:block;margin-bottom:4px}
+  .care{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  .care .row{
+    display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start;
+    font-size:15px;color:var(--ink-soft);
+  }
+  .care .dot{
+    width:9px;height:9px;margin-top:9px;border-radius:50%;
+    background:var(--amber);flex-shrink:0;
+  }
+  .care b{color:var(--ink)}
+
+  /* usage cards */
+  .uses{margin-top:28px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  .use{
+    background:var(--card);border:1px solid var(--line);padding:20px;
+  }
+  .use .tag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--amber);font-weight:600;
+  }
+  .use h4{font-size:16px;font-weight:700;margin:8px 0 6px}
+  .use p{font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+
+  /* tldr */
+  .tldr{
+    margin-top:54px;
+    border:2px solid var(--ink);
+    background:var(--card);
+    padding:30px 28px;
+  }
+  .tldr .kicker{margin-bottom:14px}
+  .flow{
+    display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+    font-family:var(--mono);font-size:14px;
+  }
+  .flow .step{
+    background:var(--ink);color:var(--paper);padding:8px 14px;border-radius:4px;
+    font-weight:600;
+  }
+  .flow .arrow{color:var(--amber);font-weight:700}
+
+  footer{
+    border-top:1px solid var(--line);
+    margin-top:60px;padding:28px 0;
+    font-size:12.5px;color:var(--mute);
+  }
+  footer .src{font-family:var(--mono);line-height:2}
+  footer a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer a:hover{color:var(--amber)}
+
+  @media (max-width:680px){
+    .uses{grid-template-columns:1fr}
+    .spec{flex:1 1 50%;min-width:0;border-bottom:1px solid var(--line)}
+    h1{font-size:32px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Hardware · 성능 최적화 가이드</div>
+    <h1>4GB 납땜 노트북,<br>한계까지 끌어쓰기</h1>
+    <p class="lede">RAM은 못 늘립니다. 그래도 체감 속도를 끌어올릴 레버리지는 따로 있습니다. 확인된 대상 사양 기준으로 우선순위와 실제 설정 방법을 정리했습니다.</p>
+    <div class="plate">
+      <div class="spec locked">
+        <div class="k">Memory</div>
+        <div class="v">4 GB</div>
+        <span class="tag">soldered · 교체 불가</span>
+      </div>
+      <div class="spec">
+        <div class="k">Storage</div>
+        <div class="v">128 GB</div>
+        <span class="tag">SSD · 용량 빠듯</span>
+      </div>
+      <div class="spec">
+        <div class="k">OS</div>
+        <div class="v">Win 10</div>
+        <span class="tag">기준 환경</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="verdict">
+  <div class="wrap">
+    <div class="label">결론 먼저</div>
+    <p><strong>납땜 RAM은 사실상 교체 불가입니다.</strong> 마이크로 솔더링은 전문 장비·숙련도가 필요하고 메인보드 손상 위험이 크며 비용이 새 노트북 값을 넘기는 경우가 많습니다. 레버리지는 <strong>가상메모리 설정과 Windows 10 자체 최적화</strong> 쪽에 있습니다.</p>
+  </div>
+</div>
+
+<main>
+  <div class="wrap">
+
+    <!-- 우선순위 -->
+    <section class="block">
+      <div class="kicker">Priority — 비용 대비 효과 순</div>
+      <h2>효과가 확실한 순서</h2>
+      <p class="sub">위에서 아래로 적용하세요. 아래로 갈수록 마지막 카드가 됩니다.</p>
+
+      <div class="rank">
+        <div class="item">
+          <div class="num">1</div>
+          <div>
+            <h3>SSD 확인 / 교체 <span class="meta">// 이미 128GB SSD 보유</span></h3>
+            <p>HDD였다면 최우선이지만, 이미 SSD이므로 통과. 4GB 환경은 swap(page file)을 자주 타는데 이때 디스크 속도가 곧 체감 속도입니다. SSD라 다음 단계인 가상메모리 설정이 실효성을 가집니다.</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="num">2</div>
+          <div>
+            <h3>가상메모리 수동 설정 <span class="meta">// 지금 바로 적용</span></h3>
+            <p>4GB + SSD 조합에서 거의 유일하게 의미 있는 소프트웨어 튜닝. 멈춤(freeze)을 줄여주는 응급 처방입니다. 아래에 단계별 방법과 권장값을 정리했습니다.</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="num">3</div>
+          <div>
+            <h3>Windows 10 자체 최적화 <span class="meta">// 꾸준히 관리</span></h3>
+            <p>OS는 Windows 10 그대로 유지하면서 부담을 줄이는 방법입니다. <b>시작프로그램 비활성화</b>(<span class="chip">Ctrl+Shift+Esc</span> → 시작프로그램 탭), <b>블로트웨어 제거</b>, <b>디스크 정리</b>로 메모리·디스크 여유를 확보합니다.</p>
+            <p>잔여물·드라이버 충돌이 누적돼 느려졌다면 <b>OS 클린 설치</b>가 가장 확실한 초기화입니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 가상메모리 설정 -->
+    <section class="block">
+      <div class="kicker">Step-by-step</div>
+      <h2>가상메모리 수동 설정</h2>
+      <p class="sub">Windows 10 기준. 경로는 Windows 11과 거의 동일합니다.</p>
+
+      <div class="panel">
+        <div class="head">
+          <span>설정 경로</span>
+          <span class="os">OS: Windows 10</span>
+        </div>
+        <ol class="steps">
+          <li><span><b>실행 창 열기</b> — <code>Win + R</code> → <code>sysdm.cpl</code> 입력 후 Enter <br>(또는 시작에서 "고급 시스템 설정 보기" 검색)</span></li>
+          <li><span><b>고급</b> 탭 → <b>성능</b> 영역의 <b>설정</b> 클릭</span></li>
+          <li><span>성능 옵션 창에서 다시 <b>고급</b> 탭 → <b>가상 메모리</b> 영역의 <b>변경</b> 클릭</span></li>
+          <li><span>맨 위 <b>"모든 드라이브의 페이징 파일 크기 자동 관리"</b> 체크 <b>해제</b></span></li>
+          <li><span><b>C:</b> 드라이브 선택 → <b>사용자 지정 크기</b> 선택</span></li>
+          <li><span>초기 / 최대 크기 입력 → <b>설정</b> → <b>확인</b></span></li>
+          <li><span><b>재부팅</b> — 적용에 필수</span></li>
+        </ol>
+      </div>
+
+      <div class="reco">
+        <div class="reco-head">128GB SSD 권장값 <span>단위 · MB</span></div>
+        <dl class="reco-list">
+          <div class="reco-row">
+            <dt>초기 크기</dt>
+            <dd><b>4096</b> — RAM의 약 1배</dd>
+          </div>
+          <div class="reco-row">
+            <dt>최대 크기</dt>
+            <dd><b>8192</b> — 용량이 작으므로 12GB는 비권장 · 작업/캐시 공간 확보가 우선</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="note-box">
+        <span class="t">왜 8192까지만?</span>
+        128GB는 용량이 빠듯해서 page file을 너무 키우면 정작 작업·캐시 공간이 부족해집니다. SSD는 빈 공간이 모자라면 쓰기 성능도 떨어지므로, <b>여유 공간을 최소 15~20GB는 남기는</b> 것을 기준으로 최대값을 잡았습니다.
+      </div>
+
+      <div class="care">
+        <div class="row"><span class="dot"></span><span><b>Storage Sense 켜기</b> — 설정 → 시스템 → 저장소 → 자동으로 임시 파일·휴지통 정리.</span></div>
+        <div class="row"><span class="dot"></span><span><b>큰 파일은 외부로 옮기기</b> — 동영상·사진·문서 등 용량 큰 파일은 외장 하드/USB나 클라우드(OneDrive, Google Drive 등)로 옮겨 128GB를 여유 있게 관리하세요.</span></div>
+        <div class="row"><span class="dot"></span><span><b>SSD 수명 걱정은 거의 불필요</b> — page file 정도의 쓰기로는 최신 SSD의 내구성(TBW)에 유의미한 영향을 주지 않습니다.</span></div>
+        <div class="row"><span class="dot"></span><span><b>적용 확인</b> — 재부팅 후 <code>Ctrl+Shift+Esc</code> → 성능 탭 → 메모리의 "커밋됨" 상한이 늘었으면 정상 적용.</span></div>
+      </div>
+
+      <div class="note-box">
+        <span class="t">솔직한 한계</span>
+        가상메모리 확대는 "부족한 RAM을 디스크로 메우는" 응급 처방입니다. 디스크는 RAM보다 수십~수백 배 느리므로 멈춤은 줄어도 무거운 작업에선 여전히 한계가 있습니다. ReadyBoost는 SSD에선 효과가 없어(Windows가 자동 비활성화) 고려할 필요 없습니다.
+      </div>
+    </section>
+
+    <!-- TLDR -->
+    <div class="tldr">
+      <div class="kicker">한 줄 요약</div>
+      <div class="flow">
+        <span class="step">가상메모리 4096 / 8192</span>
+        <span class="arrow">→</span>
+        <span class="step">큰 파일 외부로 옮기기</span>
+        <span class="arrow">→</span>
+        <span class="step">시작프로그램·블로트웨어 정리</span>
+        <span class="arrow">→</span>
+        <span class="step">필요 시 클린 설치</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="src">
+      참고 출처<br>
+      · <a href="https://tech.jadispress.com/laptop-ram-upgrade-soldered">Jadispress — Soldered vs. Swappable RAM</a><br>
+      · <a href="https://forums.tomshardware.com/threads/increase-performance-on-laptop-with-soldered-ram.2957303/">Tom's Hardware Forum — 가상메모리 / ReadyBoost</a><br>
+      · <a href="https://www.it4nextgen.com/how-to-safely-upgrade-ram-on-windows-laptop/">IT4nextgen — Windows RAM 업그레이드</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -282,6 +282,32 @@
     margin-right:5px;
   }
 
+  /* how it works */
+  .how{margin-top:24px}
+  .how-title{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--amber);
+    margin-bottom:10px;
+  }
+  .how p{
+    font-size:15px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .how p + p{margin-top:10px}
+  .how p b{color:var(--ink);font-weight:700}
+  .how .how-key{
+    margin-top:14px;
+    padding:13px 18px;
+    border-left:3px solid var(--amber);
+    background:var(--amber-tint);
+    color:#6e4a10;
+    font-size:14.5px;
+  }
+
   /* callouts */
   .note-box{
     margin-top:20px;
@@ -424,6 +450,13 @@
       <div class="kicker">Step-by-step</div>
       <h2>가상메모리 수동 설정</h2>
       <p class="sub">Windows 10 기준. 경로는 Windows 11과 거의 동일합니다.</p>
+
+      <div class="how">
+        <div class="how-title">먼저 · 가상메모리는 어떻게 동작하나</div>
+        <p>램이 부족해질 것 같으면 Windows가 한동안 쓰지 않은 데이터를 골라 디스크의 page file로 내보내 램 공간을 확보합니다 (<code>page out</code>). 그렇게 디스크로 보냈던 것 중 다시 필요해지면 램으로 불러들여 사용합니다 (<code>page in</code>).</p>
+        <p>오가는 단위는 파일이 아니라 <b>page</b>(보통 4KB 크기의 메모리 조각)이며, 어떤 페이지를 내보낼지는 <b>얼마나 오래 안 쓰였는지</b>를 기준으로 정합니다. 그래서 활성 작업은 램에 남고, 한참 방치된 백그라운드 메모리가 먼저 디스크로 밀려납니다.</p>
+        <p class="how-key">속도를 빠르게 만드는 게 아니라, 램이 넘칠 때 멈춤을 막아주는 안전망입니다. 디스크는 램보다 수십~수백 배 느리므로 page file을 타는 순간 이미 느려진 상태이고, SSD라서 그 느려짐이 덜할 뿐입니다.</p>
+      </div>
 
       <div class="panel">
         <div class="head">

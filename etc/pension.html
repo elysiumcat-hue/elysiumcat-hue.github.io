@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연금저축 · IRP · ISA — 2026 정리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root {
+  --bg: #F4EFE6;
+  --bg-soft: #ECE5D8;
+  --bg-card: #FAF6EE;
+  --ink: #1C1A17;
+  --ink-soft: #4A453E;
+  --muted: #7A7068;
+  --line: #C9BFB0;
+  --line-soft: #DDD3C2;
+  --accent: #6B2A2A;
+  --accent-soft: #8B3A3A;
+  --gold: #97743C;
+  --serif: 'Noto Serif KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Cormorant Garamond', serif;
+  --sans: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', BlinkMacSystemFont, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', Monaco, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  background-image:
+    radial-gradient(ellipse at top left, rgba(151, 116, 60, 0.04), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(107, 42, 42, 0.03), transparent 60%);
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  body { font-size: 15px; line-height: 1.7; }
+  .chapter h3 { font-size: 1.1rem; }
+  .chapter h4 { font-size: 0.95rem; }
+  .section-lede { font-size: 1rem; padding-left: 16px; }
+  .card { padding: 20px; }
+  .callout { padding: 18px 20px; }
+  .tip { padding: 18px 20px; gap: 14px; }
+  .tip-num { font-size: 1.8rem; }
+}
+
+/* ===== TYPOGRAPHY ===== */
+.serif { font-family: var(--serif); font-weight: 400; }
+.mono { font-family: var(--mono); font-size: 0.85em; }
+
+h1, h2, h3, h4 { font-family: var(--serif); font-weight: 500; line-height: 1.3; color: var(--ink); }
+
+/* ===== LAYOUT ===== */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+@media (max-width: 768px) {
+  .wrap { padding: 0 20px; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .hero { padding: 56px 0 40px; }
+  .hero .meta { gap: 16px; flex-wrap: wrap; margin-top: 32px; }
+  .main { padding: 48px 0; }
+  section.chapter { margin-bottom: 64px; }
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 32px; left: 50%; transform: translateX(-50%);
+  width: 60px; height: 1px;
+  background: var(--gold);
+}
+
+.hero .kicker {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 11px;
+  color: var(--gold);
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 300;
+  text-align: center;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--accent);
+  font-weight: 400;
+}
+
+.hero .lede {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 300;
+  color: var(--ink-soft);
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+.hero .meta {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 48px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.hero .meta span::before {
+  content: '· ';
+  color: var(--gold);
+  margin-right: 4px;
+}
+
+/* ===== TOC ===== */
+.toc {
+  position: sticky;
+  top: 40px;
+  font-size: 13px;
+  border-left: 1px solid var(--line);
+  padding-left: 24px;
+}
+
+.toc-title {
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+}
+
+.toc li {
+  counter-increment: toc;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.toc a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  display: block;
+  transition: color 0.2s;
+  font-family: var(--serif);
+}
+
+.toc a::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  margin-right: 10px;
+}
+
+.toc a:hover { color: var(--accent); }
+
+/* ===== MAIN GRID ===== */
+.main {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 64px;
+  padding: 80px 0;
+}
+
+@media (max-width: 960px) {
+  .main { grid-template-columns: 1fr; gap: 32px; }
+  .toc { display: none; }
+}
+
+/* ===== SECTIONS ===== */
+section.chapter {
+  margin-bottom: 96px;
+  scroll-margin-top: 40px;
+}
+
+.chapter-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 12px;
+  display: block;
+}
+
+.chapter h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 500;
+  margin-bottom: 28px;
+  letter-spacing: -0.01em;
+  position: relative;
+}
+
+.chapter h2::after {
+  content: '';
+  display: block;
+  width: 40px; height: 2px;
+  background: var(--accent);
+  margin-top: 16px;
+}
+
+.chapter h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 40px 0 16px;
+  color: var(--ink);
+}
+
+.chapter h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 24px 0 10px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.chapter p {
+  margin-bottom: 18px;
+  color: var(--ink-soft);
+}
+
+.chapter p strong { color: var(--ink); font-weight: 700; }
+
+.chapter ul, .chapter ol {
+  margin: 16px 0 24px;
+  padding-left: 24px;
+  color: var(--ink-soft);
+}
+
+.chapter li {
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.chapter li::marker { color: var(--gold); }
+
+/* ===== LEDE (intro paragraph) ===== */
+.section-lede {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.8;
+  margin-bottom: 32px;
+  padding-left: 24px;
+  border-left: 2px solid var(--gold);
+}
+
+/* ===== CARD ===== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  padding: 28px 32px;
+  margin: 24px 0;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 16px; height: 16px;
+  border-top: 1px solid var(--accent);
+  border-left: 1px solid var(--accent);
+}
+
+.card-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* ===== TABLE ===== */
+.table-wrap {
+  margin: 32px 0;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: var(--bg-card);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  text-align: left;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink-soft);
+}
+
+th {
+  background: var(--bg-soft);
+  font-family: var(--serif);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  border-bottom: 2px solid var(--accent);
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+tbody tr:hover { background: rgba(151, 116, 60, 0.04); }
+
+td.label {
+  font-weight: 600;
+  color: var(--ink);
+  font-family: var(--serif);
+}
+
+/* ===== KEY-VALUE LIST ===== */
+.kv {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px 24px;
+  margin: 20px 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.kv dt {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  padding-top: 4px;
+}
+
+.kv dd {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+@media (max-width: 600px) {
+  .kv { grid-template-columns: 1fr; gap: 4px 0; }
+  .kv dd { margin-bottom: 12px; }
+}
+
+/* ===== GLOSSARY ===== */
+.glossary {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.term {
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  padding: 24px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.term:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.term-name {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.term-eng {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.term-desc {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+/* ===== CALLOUT ===== */
+.callout {
+  background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg-card) 100%);
+  border-left: 3px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  position: relative;
+}
+
+.callout::before {
+  content: '※';
+  font-family: var(--serif);
+  position: absolute;
+  top: 20px; right: 24px;
+  font-size: 24px;
+  color: var(--accent);
+  opacity: 0.4;
+}
+
+.callout-title {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.callout p { margin-bottom: 8px; font-size: 14px; }
+.callout p:last-child { margin-bottom: 0; }
+
+/* ===== TIP ===== */
+.tip {
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  padding: 24px 28px;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.tip-num {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.tip-body h4 {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.tip-body p {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+/* ===== HIGHLIGHT NUMBER ===== */
+.highlight-num {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: var(--accent);
+  font-style: italic;
+  line-height: 1;
+  vertical-align: middle;
+  margin: 0 4px;
+}
+
+/* ===== ORDER FLOW ===== */
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+
+@media (max-width: 768px) {
+  .flow { grid-template-columns: 1fr; }
+}
+
+.flow-step {
+  background: var(--bg-card);
+  border: 1px solid var(--line-soft);
+  padding: 20px;
+  position: relative;
+}
+
+.flow-step .step-no {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+
+.flow-step .step-name {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.flow-step .step-amount {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.flow-step .step-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 48px 0;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+footer .ornament {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--gold);
+  margin-bottom: 16px;
+}
+
+/* ===== INLINE TAG ===== */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.tag.accent { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+/* Selection */
+::selection { background: var(--accent); color: var(--bg); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">A Personal Finance Companion — 2026</div>
+    <h1>연금저축 · IRP · <em>ISA</em></h1>
+    <p class="lede">
+      한국의 세 가지 핵심 절세 계좌. 각각의 구조와 혜택, 헷갈리기 쉬운 용어들,
+      그리고 실제로 어떻게 조합해서 써야 하는지를 한 번에 정리합니다.
+    </p>
+    <div class="meta">
+      <span>2026년 5월 기준</span>
+      <span>국내 거주자 대상</span>
+      <span>일반형 기준</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="wrap">
+  <div class="main">
+
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-title">Contents</div>
+      <ol>
+        <li><a href="#intro">개요</a></li>
+        <li><a href="#pension">연금저축</a></li>
+        <li><a href="#irp">IRP</a></li>
+        <li><a href="#isa">ISA</a></li>
+        <li><a href="#glossary">용어 사전</a></li>
+        <li><a href="#strategy">투자 전략</a></li>
+        <li><a href="#tips">꿀팁 모음</a></li>
+        <li><a href="#caution">유의사항</a></li>
+      </ol>
+    </aside>
+
+    <!-- CONTENT -->
+    <article>
+
+      <!-- 1. INTRO -->
+      <section id="intro" class="chapter">
+        <span class="chapter-num">CHAPTER 01</span>
+        <h2>개요 — 세 계좌의 정체성</h2>
+
+        <p class="section-lede">
+          연금저축, IRP, ISA는 이름이 비슷해 보이지만 목적이 완전히 다른 계좌입니다.
+          하나는 노후, 하나는 퇴직, 하나는 절세 투자. 이 본질부터 명확히 잡으면 나머지는 디테일입니다.
+        </p>
+
+        <div class="kv">
+          <dt>연금저축</dt>
+          <dd>노후 자금 준비 + 납입 시 세액공제. <strong>"내는 순간 세금 돌려받는 계좌"</strong></dd>
+          <dt>IRP</dt>
+          <dd>퇴직금 수령 통로 + 추가 납입 세액공제. <strong>"퇴직 + 노후 패키지 계좌"</strong></dd>
+          <dt>ISA</dt>
+          <dd>일반 투자 수익에 대한 절세. <strong>"굴리는 동안 세금 깎아주는 계좌"</strong></dd>
+        </div>
+
+        <p>
+          핵심 구분은 <strong>세금이 깎이는 타이밍</strong>입니다.
+          연금저축과 IRP는 <em>납입할 때</em> 세금을 돌려받고 나중에 연금소득세로 일부 토해내는 구조,
+          ISA는 <em>운용 중</em>에 발생한 수익에 세금을 덜 떼는 구조입니다.
+          그래서 연금저축·IRP는 "선공제 후납부", ISA는 "운용기 절세"라고 부릅니다.
+        </p>
+      </section>
+
+      <!-- 2. 연금저축 -->
+      <section id="pension" class="chapter">
+        <span class="chapter-num">CHAPTER 02</span>
+        <h2>연금저축</h2>
+
+        <p class="section-lede">
+          정식 명칭은 <strong>연금저축계좌</strong>. 보통 증권사에서 가입하는 형태는 "연금저축펀드"라고 부릅니다.
+          소득이 없어도 가입 가능하고, 누구나 만들 수 있는 가장 유연한 노후 계좌입니다.
+        </p>
+
+        <div class="kv">
+          <dt>가입 대상</dt>
+          <dd>제한 없음 (전업주부, 미성년자, 무소득자 모두 가능)</dd>
+          <dt>연간 납입한도</dt>
+          <dd>1,800만 원 (IRP, DC와 합산)</dd>
+          <dt>세액공제 한도</dt>
+          <dd>연 600만 원 (IRP와 합산 시 최대 900만 원)</dd>
+          <dt>세액공제율</dt>
+          <dd>총급여 5,500만 이하 16.5% / 초과 13.2% <span class="mono">(지방소득세 포함)</span></dd>
+          <dt>운용 가능 상품</dt>
+          <dd>펀드, ETF, 리츠, MMF 등 (RP·발행어음·MMW <strong>불가</strong>)</dd>
+          <dt>연금 수령</dt>
+          <dd>만 55세 이후, 가입 후 5년 이상 경과 시</dd>
+          <dt>연금 수령 시 세율</dt>
+          <dd>3.3% ~ 5.5% (연금소득세, 수령 시 연령에 따라)</dd>
+          <dt>중도 인출</dt>
+          <dd>가능하지만 세액공제 받은 원금 + 운용수익에 <strong>기타소득세 16.5%</strong> 부과</dd>
+        </div>
+
+        <h3>핵심 특징</h3>
+
+        <p>
+          연금저축의 가장 큰 장점은 <strong>과세이연</strong>입니다.
+          ETF 배당이든 펀드 수익이든, 계좌 안에서 발생한 수익은 즉시 과세되지 않고
+          연금 수령 시점까지 미뤄집니다. 미뤄진 세금까지 다시 굴려지므로 장기적으로 복리 효과가 큽니다.
+        </p>
+
+        <p>
+          또한 IRP와 달리 <strong>안전자산 의무 비중이 없습니다</strong>.
+          위험자산(주식형 ETF, 펀드)에 100%까지 투자할 수 있어,
+          공격적인 운용을 원한다면 IRP보다 연금저축이 적합합니다.
+        </p>
+
+        <div class="callout">
+          <div class="callout-title">"연금저축 CMA"는 별도 상품이 아닙니다</div>
+          <p>
+            증권사가 마케팅상 붙이는 명칭으로, 실제로는 연금저축펀드 계좌에 <strong>MMF 자동매수 약정</strong>이 걸린 형태입니다.
+            계좌에 미투자 현금이 들어오면 자동으로 MMF를 매수해 단기 수익을 내주는 옵션이에요.
+            일반 CMA처럼 RP·발행어음·MMW로 굴리는 것은 연금저축에서는 불가능합니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 3. IRP -->
+      <section id="irp" class="chapter">
+        <span class="chapter-num">CHAPTER 03</span>
+        <h2>IRP — 개인형 퇴직연금</h2>
+
+        <p class="section-lede">
+          <strong>Individual Retirement Pension</strong>. 직장인의 퇴직금이 들어오는 그릇이면서,
+          동시에 본인이 추가 납입해 세액공제를 받는 절세 계좌이기도 합니다.
+        </p>
+
+        <div class="kv">
+          <dt>가입 대상</dt>
+          <dd>소득이 있는 자 (직장인, 자영업자, 공무원, 프리랜서 등)</dd>
+          <dt>연간 납입한도</dt>
+          <dd>1,800만 원 (연금저축, DC와 합산)</dd>
+          <dt>세액공제 한도</dt>
+          <dd>연금저축과 합산해 연 900만 원 / IRP 단독 시도 900만 원까지</dd>
+          <dt>세액공제율</dt>
+          <dd>총급여 5,500만 이하 16.5% / 초과 13.2%</dd>
+          <dt>최대 환급액</dt>
+          <dd>900만 원 풀납입 시 <span class="highlight-num">148.5</span>만 원 (저소득) / <span class="highlight-num">118.8</span>만 원 (고소득)</dd>
+          <dt>운용 제약</dt>
+          <dd>위험자산 최대 70%, <strong>안전자산 30% 의무 편입</strong></dd>
+          <dt>중도 인출</dt>
+          <dd>법정 사유(무주택자 주택 구입, 6개월 이상 요양, 파산 등) 외에는 <strong>원칙적 불가</strong></dd>
+          <dt>예금자보호</dt>
+          <dd>예금성 상품 한정 1억 원까지 (별도 한도)</dd>
+        </div>
+
+        <h3>연금저축과의 결정적 차이</h3>
+
+        <table class="table-wrap" style="margin-top:24px;">
+          <thead><tr><th></th><th>연금저축</th><th>IRP</th></tr></thead>
+          <tbody>
+            <tr><td class="label">가입 대상</td><td>누구나</td><td>소득자만</td></tr>
+            <tr><td class="label">위험자산 비중</td><td>최대 100%</td><td>최대 70% (안전 30% 의무)</td></tr>
+            <tr><td class="label">중도 인출</td><td>가능 (페널티 있음)</td><td>법정 사유 외 불가</td></tr>
+            <tr><td class="label">세액공제 한도</td><td>600만 단독 / 900만 합산</td><td>900만 단독 가능</td></tr>
+            <tr><td class="label">예금자보호</td><td>X (예탁금만 1억)</td><td>예금성 상품 1억 (별도)</td></tr>
+            <tr><td class="label">퇴직금 수령</td><td>불가</td><td>가능 (주요 용도 중 하나)</td></tr>
+          </tbody>
+        </table>
+
+        <h3>운용 가능 상품</h3>
+        <p>
+          IRP는 연금저축보다 운용 가능 상품군이 넓습니다.
+          <span class="tag">원리금보장형 예금</span>
+          <span class="tag">펀드</span>
+          <span class="tag">ETF</span>
+          <span class="tag">리츠</span>
+          <span class="tag">채권</span>
+          등을 한 계좌에 담을 수 있습니다.
+          다만 위험자산은 70%를 넘을 수 없어, 나머지 30%는 예금이나 채권형 펀드 등 안전자산으로 채워야 합니다.
+        </p>
+
+        <div class="callout">
+          <div class="callout-title">퇴직금이 IRP로 들어오면?</div>
+          <p>
+            <strong>퇴직금은 세액공제 한도에 포함되지 않습니다.</strong>
+            본인이 자발적으로 추가 납입한 금액만 공제 대상이에요.
+            퇴직금 3,000만 원이 IRP로 들어왔어도 별도로 900만 원을 추가 납입해야 풀공제를 받습니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. ISA -->
+      <section id="isa" class="chapter">
+        <span class="chapter-num">CHAPTER 04</span>
+        <h2>ISA — 개인종합자산관리계좌</h2>
+
+        <p class="section-lede">
+          <strong>Individual Savings Account</strong>. 연금이 아니라 <em>일반 투자</em>를 위한 절세 계좌입니다.
+          하나의 계좌 안에서 주식·ETF·펀드·예금 등을 자유롭게 굴리면서 세금 혜택을 받는 구조예요.
+        </p>
+
+        <div class="kv">
+          <dt>가입 대상</dt>
+          <dd>19세 이상 거주자 (또는 근로소득 있는 15~19세)</dd>
+          <dt>연간 납입한도</dt>
+          <dd>2,000만 원</dd>
+          <dt>누적 납입한도</dt>
+          <dd>1억 원 (5년간)</dd>
+          <dt>의무 보유기간</dt>
+          <dd>3년</dd>
+          <dt>세제 혜택</dt>
+          <dd>일반형 수익 200만 원, 서민형 400만 원까지 <strong>비과세</strong></dd>
+          <dt>초과 수익</dt>
+          <dd><strong>9.9% 분리과세</strong> (일반 과세 15.4% 대비 대폭 절감)</dd>
+          <dt>손익통산</dt>
+          <dd>계좌 내 모든 상품의 손익을 합산해 순이익에만 과세</dd>
+          <dt>서민형 자격</dt>
+          <dd>총급여 5,000만 이하 근로자 또는 종합소득 3,800만 이하 사업자/농어민</dd>
+        </div>
+
+        <h3>유형별 차이</h3>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>유형</th><th>운용 주체</th><th>특징</th></tr></thead>
+            <tbody>
+              <tr><td class="label">중개형</td><td>본인 직접 매매</td><td>국내주식 직접 매수 가능, 가장 일반적 (개미 투자자 표준)</td></tr>
+              <tr><td class="label">신탁형</td><td>금융사 위탁</td><td>매매를 금융사에 신탁, 본인 지시에 따라 운용</td></tr>
+              <tr><td class="label">일임형</td><td>금융사 일임</td><td>모델 포트폴리오 따라 자동 운용, 수수료 있음</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>2026년 개편 추진안 (입법 진행 중)</h3>
+        <p>
+          2026년 현재 ISA를 더욱 강화하는 세법 개정안이 논의 중입니다.
+          국회 통과 후 확정되므로 가입 전 최신 내용을 반드시 확인하세요.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>항목</th><th>현행</th><th>개편 추진안</th></tr></thead>
+            <tbody>
+              <tr><td class="label">연간 납입한도</td><td>2,000만</td><td>4,000만</td></tr>
+              <tr><td class="label">누적 한도</td><td>1억</td><td>2억</td></tr>
+              <tr><td class="label">비과세 한도 (일반형)</td><td>200만</td><td>500만</td></tr>
+              <tr><td class="label">비과세 한도 (서민형)</td><td>400만</td><td>1,000만</td></tr>
+              <tr><td class="label">초과분 분리과세율</td><td>9.9%</td><td>5% (검토 중)</td></tr>
+              <tr><td class="label">국내투자형 신설</td><td>—</td><td>금융소득종합과세자도 가입 가능</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">미납입한도는 다음 해로 이월됩니다</div>
+          <p>
+            올해 1,000만 원만 납입했다면 미사용 1,000만이 내년으로 넘어갑니다.
+            따라서 당장 투자할 자금이 없어도 <strong>계좌부터 만들어 두면 한도가 쌓입니다</strong>.
+            5분 만에 비대면 개설이 가능하므로 지금 만드는 것이 절세 자산 빌딩의 첫 단추입니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 5. 용어 -->
+      <section id="glossary" class="chapter">
+        <span class="chapter-num">CHAPTER 05</span>
+        <h2>용어 사전</h2>
+
+        <p class="section-lede">
+          위 내용에 등장한 핵심 용어들을 별도로 정리합니다.
+          금융 문서를 읽을 때 가장 자주 마주치는 단어들이에요.
+        </p>
+
+        <h3>세제 용어</h3>
+        <div class="glossary">
+          <div class="term">
+            <div class="term-name">세액공제</div>
+            <div class="term-eng">Tax Credit</div>
+            <div class="term-desc">계산된 세금에서 <strong>직접 금액을 빼주는</strong> 방식. 소득이 얼마든 같은 금액을 환급. 연금저축·IRP가 이 방식.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">소득공제</div>
+            <div class="term-eng">Income Deduction</div>
+            <div class="term-desc">과세 대상 소득 자체를 줄여주는 방식. 고소득자일수록 절세효과 큼. 신용카드 사용액·주택청약 등이 해당.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">과세이연</div>
+            <div class="term-eng">Tax Deferral</div>
+            <div class="term-desc">발생한 수익에 대한 세금을 <strong>당장 떼지 않고 나중으로 미루는</strong> 것. 미뤄진 세금까지 다시 굴려지므로 장기 복리 효과 큼.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">손익통산</div>
+            <div class="term-eng">Loss Offset</div>
+            <div class="term-desc">계좌 내 모든 상품의 이익과 손실을 <strong>합산해 순이익에만 과세</strong>하는 방식. ISA의 핵심 혜택 중 하나.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">분리과세</div>
+            <div class="term-eng">Separate Taxation</div>
+            <div class="term-desc">종합소득에 합산하지 않고 <strong>별도 세율로 따로 과세</strong>. ISA 초과수익 9.9%, 금융소득 2,000만 이하 15.4%가 대표적.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">연금소득세</div>
+            <div class="term-eng">Pension Income Tax</div>
+            <div class="term-desc">연금 수령 시 부과되는 저율 세금. <strong>3.3% ~ 5.5%</strong>로 일반 소득세보다 매우 낮음. 수령 시점 연령에 따라 차등.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">기타소득세</div>
+            <div class="term-eng">Other Income Tax</div>
+            <div class="term-desc">연금계좌를 중도해지하거나 연금 외 수령 시 부과. <strong>16.5%</strong>로 세액공제 혜택을 사실상 회수.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">의무 보유기간</div>
+            <div class="term-eng">Lock-up Period</div>
+            <div class="term-desc">세제혜택을 받기 위해 계좌를 유지해야 하는 최소 기간. ISA는 3년, 연금저축·IRP는 만 55세까지.</div>
+          </div>
+        </div>
+
+        <h3>투자 상품 용어</h3>
+        <div class="glossary">
+          <div class="term">
+            <div class="term-name">ETF</div>
+            <div class="term-eng">Exchange Traded Fund</div>
+            <div class="term-desc">주식처럼 거래되는 펀드. 지수·섹터·테마 등을 추종. 운용보수가 일반 펀드보다 낮음.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">MMF</div>
+            <div class="term-eng">Money Market Fund</div>
+            <div class="term-desc">초단기 금융상품(CP·CD·단기국공채)에 투자하는 펀드. 안정성 높고 수익률 연 2~3%대. 연금저축에서 유일하게 자동매수 가능한 단기 운용 도구.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">RP</div>
+            <div class="term-eng">Repurchase Agreement</div>
+            <div class="term-desc">환매조건부채권. 채권을 일정 기간 후 다시 사주는 약속이 붙은 거래. <strong>확정 약정수익률</strong>. CMA의 가장 흔한 운용 방식.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">MMW</div>
+            <div class="term-eng">Money Market Wrap</div>
+            <div class="term-desc">고객 자금을 <strong>한국증권금융</strong>에 일임 예치해 운용하는 랩. 일복리. 안정성 매우 높음.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">CMA</div>
+            <div class="term-eng">Cash Management Account</div>
+            <div class="term-desc">증권사의 수시입출금 + 일일 이자 지급 계좌. RP·MMF·MMW·발행어음 등으로 자동운용. 은행 입출금통장보다 이자율 높음.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">발행어음</div>
+            <div class="term-eng">Promissory Note</div>
+            <div class="term-desc">증권사(종금사)가 자체 신용으로 발행한 어음. 약정수익률이 비교적 높고 신뢰도 양호. CMA 발행어음형의 운용 자산.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">리츠</div>
+            <div class="term-eng">REITs</div>
+            <div class="term-desc">부동산투자신탁. 부동산·인프라에 투자하고 임대수익·시세차익을 배당. 주식처럼 거래 가능.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">위험자산 / 안전자산</div>
+            <div class="term-eng">Risky / Safe Asset</div>
+            <div class="term-desc">위험자산은 주식·주식형 펀드·해외 ETF 등 변동성이 큰 자산. 안전자산은 예금·국공채·채권형 펀드 등. IRP는 안전자산 30% 의무.</div>
+          </div>
+        </div>
+
+        <h3>제도 용어</h3>
+        <div class="glossary">
+          <div class="term">
+            <div class="term-name">DC형 / DB형</div>
+            <div class="term-eng">Defined Contribution / Benefit</div>
+            <div class="term-desc">DC는 회사가 매년 일정 금액을 적립해 본인이 운용. DB는 퇴직 시 정해진 금액을 회사가 지급. 둘 다 퇴직연금 제도.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">연금저축펀드 / 연금저축보험 / 연금저축신탁</div>
+            <div class="term-eng">Pension Savings Variants</div>
+            <div class="term-desc">연금저축의 세 가지 형태. 증권사=펀드(ETF 매수 가능), 보험사=보험(공시이율), 은행=신탁(2018년 이후 신규 가입 중단).</div>
+          </div>
+          <div class="term">
+            <div class="term-name">중개형 / 신탁형 / 일임형 ISA</div>
+            <div class="term-eng">ISA Types</div>
+            <div class="term-desc">중개형=본인 직접 매매(가장 일반적), 신탁형=금융사 신탁 운용, 일임형=금융사가 포트폴리오 일임. 셋 중 하나만 선택 가능.</div>
+          </div>
+          <div class="term">
+            <div class="term-name">서민형 ISA</div>
+            <div class="term-eng">Low-income ISA</div>
+            <div class="term-desc">총급여 5,000만 이하 등 일정 소득기준 충족자가 가입 가능한 ISA. 비과세 한도가 일반형의 2배(400만).</div>
+          </div>
+          <div class="term">
+            <div class="term-name">금융소득종합과세</div>
+            <div class="term-eng">Global Taxation</div>
+            <div class="term-desc">이자·배당 합계가 연 2,000만 초과 시 종합소득에 합산해 누진과세. 고소득자는 일반 ISA 가입 불가(개편 시 국내투자형 신설 예정).</div>
+          </div>
+          <div class="term">
+            <div class="term-name">통합연금포털</div>
+            <div class="term-eng">Pension Portal</div>
+            <div class="term-desc">금융감독원이 운영하는 100lifeplan.fss.or.kr. 본인의 모든 연금 가입 현황과 금융사별 수수료를 한눈에 비교 가능.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. 전략 -->
+      <section id="strategy" class="chapter">
+        <span class="chapter-num">CHAPTER 06</span>
+        <h2>일반적인 투자 전략</h2>
+
+        <p class="section-lede">
+          세 계좌를 어떤 순서로, 어떻게 나눠 활용해야 절세 효율이 극대화될까요?
+          전문가들이 공통적으로 권하는 "황금 순서"가 있습니다.
+        </p>
+
+        <h3>절세 황금 순서</h3>
+
+        <div class="flow">
+          <div class="flow-step">
+            <div class="step-no">STEP 01</div>
+            <div class="step-name">연금저축</div>
+            <div class="step-amount">600만 원</div>
+            <div class="step-desc">세액공제율이 가장 높은 한도부터 먼저 채움. 위험자산 100% 가능해 운용 유연성 높음.</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-no">STEP 02</div>
+            <div class="step-name">IRP</div>
+            <div class="step-amount">300만 원</div>
+            <div class="step-desc">연금저축 600만 채운 뒤 추가 300만 IRP에 납입. 합계 900만 세액공제 풀활용.</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-no">STEP 03</div>
+            <div class="step-name">ISA</div>
+            <div class="step-amount">~2,000만 원</div>
+            <div class="step-desc">운용 중 절세. 비과세 한도 내 ETF 배당·매매차익 비과세, 초과분 9.9%.</div>
+          </div>
+          <div class="flow-step">
+            <div class="step-no">STEP 04</div>
+            <div class="step-name">ISA → 연금</div>
+            <div class="step-amount">+ 300만 추가공제</div>
+            <div class="step-desc">ISA 3년 만기 후 자금을 연금계좌로 이전 시, 전환액의 10%(최대 300만) 추가 공제.</div>
+          </div>
+        </div>
+
+        <h3>연봉 구간별 권장 전략</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>구간</th><th>공제율</th><th>전략</th><th>최대 환급</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="label">총급여 5,500만 이하</td>
+                <td>16.5%</td>
+                <td>연금저축 600 + IRP 300 + ISA → 연금 전환까지 풀활용</td>
+                <td>148.5만 + 49.5만 = <strong>198만</strong></td>
+              </tr>
+              <tr>
+                <td class="label">총급여 5,500만 초과</td>
+                <td>13.2%</td>
+                <td>동일 + ISA 비중 증대로 보완</td>
+                <td>118.8만 + 39.6만 = <strong>158.4만</strong></td>
+              </tr>
+              <tr>
+                <td class="label">자영업/프리랜서</td>
+                <td>소득 따라</td>
+                <td>연금저축 우선 600만, IRP는 여력 따라 추가</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="label">전업주부/무소득</td>
+                <td>해당없음</td>
+                <td>세액공제 무의미. <strong>ISA 위주</strong> + 연금저축은 과세이연 목적으로만</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>자산 배분 가이드</h3>
+        <p>
+          세 계좌는 목적이 다르므로 운용 전략도 다르게 가져가는 것이 좋습니다.
+        </p>
+
+        <div class="kv">
+          <dt>연금저축</dt>
+          <dd>장기 노후 자금. 위험자산 80~100%. <strong>국내상장 해외ETF</strong>(미국 S&amp;P500, 미국 배당다우존스 등)가 과세이연 + 환차익 비과세 효과까지 누릴 수 있어 인기.</dd>
+          <dt>IRP</dt>
+          <dd>안전자산 30% 의무. 채권형 ETF + 예금 + 위험자산 70%로 구성. 안정 위주.</dd>
+          <dt>ISA</dt>
+          <dd>중기 자금(3~10년). 배당주·배당 ETF 중심으로 배당소득세 절감 최대화. 손익통산 활용해 손실 종목과 이익 종목 조합.</dd>
+        </div>
+      </section>
+
+      <!-- 7. 꿀팁 -->
+      <section id="tips" class="chapter">
+        <span class="chapter-num">CHAPTER 07</span>
+        <h2>꿀팁 모음</h2>
+
+        <p class="section-lede">
+          제도 자체는 같지만 어떻게 활용하느냐에 따라 환급액과 운용 효율이 크게 갈립니다.
+          실전에서 자주 놓치는 포인트들입니다.
+        </p>
+
+        <div class="tip">
+          <div class="tip-num">01</div>
+          <div class="tip-body">
+            <h4>ISA 만기 자금은 무조건 연금계좌로 옮겨라</h4>
+            <p>ISA 3년 만기 후 잔액을 연금저축이나 IRP로 이전하면, 전환액의 10%(최대 300만 원)가 기본 한도 900만 원과 <strong>별도</strong>로 추가 세액공제됩니다. 한 해 최대 1,200만 원 공제 가능. 안 옮기면 손해.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">02</div>
+          <div class="tip-body">
+            <h4>12월 31일 마감 — 연금저축은 며칠 더 일찍</h4>
+            <p>IRP는 12월 31일까지 입금하면 인정. 연금저축은 <strong>펀드 매수 체결일</strong>이 기준이라 매수 시간이 다음 해로 넘어가면 올해 공제 못 받음. 12월 중순에는 미리 납입·매수 완료하는 것이 안전합니다.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">03</div>
+          <div class="tip-body">
+            <h4>국내상장 해외ETF는 연금계좌에서 사라</h4>
+            <p>일반 계좌에서 해외 ETF를 매매하면 차익에 15.4% 배당소득세. 같은 종목을 연금저축·IRP에서 사면 <strong>과세이연 + 연금 수령 시 3.3~5.5%</strong>로 끝. 예: TIGER 미국S&amp;P500, SOL 미국배당다우존스 등.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">04</div>
+          <div class="tip-body">
+            <h4>ISA 계좌는 지금 당장 만들어라</h4>
+            <p>미납입한도는 다음 해로 이월됩니다. 5분이면 비대면 개설 완료. <strong>계좌가 있어야 한도가 쌓이고</strong>, 한도가 쌓여야 나중에 큰 자금을 한 번에 넣을 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">05</div>
+          <div class="tip-body">
+            <h4>IRP는 증권사가 수수료 면제인 경우가 많다</h4>
+            <p>은행·보험사 IRP는 연 0.2~0.5% 운용수수료가 흔한 반면, 증권사는 면제 또는 0%인 경우가 많음. 30년 누적되면 수익에 큰 차이. <strong>통합연금포털</strong>에서 기관별 수수료를 비교할 수 있습니다.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">06</div>
+          <div class="tip-body">
+            <h4>연금저축은 자녀·배우자 명의로도 만들 수 있다</h4>
+            <p>가입 자격에 소득 요건이 없어 미성년자·전업주부 명의 가능. 본인 한도가 부족할 때 가족 명의로 추가 운용 가능. 단, 증여세 신고 기준(미성년 2,000만 / 성년 5,000만 10년)은 별도로 확인해야 합니다.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">07</div>
+          <div class="tip-body">
+            <h4>자동이체로 한도 채우기</h4>
+            <p>연 900만을 다 채우려면 월 75만 자동이체로 잡아두면 됨. 연말에 한 번에 넣으려다 잊는 경우가 흔함. 자동이체로 묵묵히 쌓고, 12월에 부족분만 보충하는 방식이 가장 안정적.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">08</div>
+          <div class="tip-body">
+            <h4>연금 수령은 10년 이상으로 나눠 받아라</h4>
+            <p>연간 연금 수령액이 1,500만 원을 초과하면 종합과세 또는 16.5% 분리과세 선택. 1,500만 이하로 쪼개 수령하면 3.3~5.5% 연금소득세만 부과. <strong>인출 기간을 길게</strong> 잡는 것이 절세의 핵심.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">09</div>
+          <div class="tip-body">
+            <h4>중도해지는 마지막 수단 — 일부 인출 활용</h4>
+            <p>연금저축은 <strong>세액공제를 받지 않은 납입분</strong>은 페널티 없이 인출 가능. 즉 한도 초과 납입분은 비과세로 빼낼 수 있음. 무조건 해지하지 말고 일부 인출이 가능한지 먼저 확인.</p>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-num">10</div>
+          <div class="tip-body">
+            <h4>ISA 비과세 한도 = 매년 리셋 아님, 누적임</h4>
+            <p>흔한 오해: "올해 비과세 200만 다음 해 또 200만"이 아님. <strong>3년 또는 만기 시점 누적</strong>으로 200만(서민형 400만)까지가 비과세. 그래서 만기에 손익통산해 정산하는 구조.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. 유의사항 -->
+      <section id="caution" class="chapter">
+        <span class="chapter-num">CHAPTER 08</span>
+        <h2>유의사항</h2>
+
+        <div class="callout">
+          <div class="callout-title">세법은 매년 개정됩니다</div>
+          <p>
+            본 문서는 2026년 5월 기준입니다. 한도·공제율·과세 방식은 정부의 세법 개정에 따라 바뀝니다.
+            특히 <strong>ISA 개편안은 입법 진행 중</strong>이므로 가입·납입 결정 전 반드시 최신 정보를 확인하세요.
+          </p>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">투자에는 원금손실 위험이 있습니다</div>
+          <p>
+            세 계좌 모두 예금성 상품을 제외한 투자 상품은 원금 손실 가능성이 있습니다.
+            ISA·연금저축은 예금자보호 대상이 아니며, IRP는 예금성 상품만 1억까지 보호됩니다.
+            세제 혜택은 강력하지만 운용 자체는 본인 책임이라는 점을 항상 인지해야 합니다.
+          </p>
+        </div>
+
+        <div class="callout">
+          <div class="callout-title">중도해지는 절세효과를 무너뜨립니다</div>
+          <p>
+            연금저축·IRP를 만 55세 전에 해지하면 세액공제 받은 금액과 운용수익에
+            <strong>16.5% 기타소득세</strong>가 부과되어 그동안의 환급액이 사실상 회수됩니다.
+            "쓸 수 있는 돈"이 아닌 "노후 자산"이라는 인식으로 접근하세요.
+          </p>
+        </div>
+
+        <p style="margin-top: 32px; font-size: 14px; color: var(--muted);">
+          본 문서는 일반적인 정보 제공을 목적으로 하며, 개인의 소득·자산·세무 상황에 따라 실제 적용이 달라질 수 있습니다.
+          중요한 의사결정 시에는 세무사·재무설계사 등 전문가와 상담하시기 바랍니다.
+        </p>
+      </section>
+
+    </article>
+  </div>
+</div>
+
+<footer>
+  <div class="ornament">❦</div>
+  <div>연금저축 · IRP · ISA — 2026 정리</div>
+  <div style="margin-top: 8px; color: var(--gold);">A Personal Finance Companion</div>
+</footer>
+
+</body>
+</html>

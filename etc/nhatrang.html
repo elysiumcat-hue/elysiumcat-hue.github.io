@@ -2,450 +2,613 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>나트랑 맛집 & 카페 가이드</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>나트랑 식당, 카페</title>
     <style>
         :root {
-            --primary: #4F46E5;
-            --primary-hover: #4338CA;
-            --bg-color: #F3F4F6;
-            --card-bg: #FFFFFF;
-            --text-main: #1F2937;
-            --text-muted: #6B7280;
-            --tag-bg: #E0E7FF;
-            --tag-text: #3730A3;
+            --primary: #2e7d32;
+            --primary-light: #a5d6a7;
+            --bg: #f5f5f5;
+            --card-bg: #ffffff;
+            --text-main: #212121;
+            --text-muted: #616161;
+            --accent: #d32f2f;
+            --tag-bg: #e8f5e9;
+            --tag-text: #1b5e20;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
+        
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
             padding: 0;
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
-
+        
         body {
-            background-color: var(--bg-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
             color: var(--text-main);
             line-height: 1.6;
+            padding: 12px;
+            padding-bottom: 80px;
         }
-
-        header {
-            background: linear-gradient(135deg, #4F46E5, #7C3AED);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 800;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
+        
         .container {
-            max-width: 1200px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 2rem;
         }
-
-        .filters {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .filter-btn {
-            background-color: white;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            padding: 0.5rem 1.5rem;
-            border-radius: 9999px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background-color: var(--primary);
+        
+        .header {
+            background: var(--primary);
             color: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+            margin-bottom: 16px;
         }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #E5E7EB;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
             font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
             word-break: keep-all;
         }
-
-        .category-badge {
-            font-size: 0.8rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-weight: 600;
-        }
-
-        .badge-restaurant {
-            background-color: #FEF3C7;
-            color: #D97706;
-        }
-
-        .badge-cafe {
-            background-color: #D1FAE5;
-            color: #059669;
-        }
-
-        .rating {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-weight: 600;
-            color: #F59E0B;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .menu-tags {
+        
+        .tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+            justify-content: center;
+            gap: 6px;
         }
-
-        .menu-tag {
-            background-color: var(--tag-bg);
-            color: var(--tag-text);
-            padding: 0.25rem 0.75rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
+        
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 500;
         }
 
-        .features {
-            color: var(--text-main);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
+        /* 상단 고정 필터 버튼 */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 10px;
+            z-index: 100;
+            background: rgba(245, 245, 245, 0.95);
+            padding: 6px 0;
+            backdrop-filter: blur(5px);
         }
         
-        .highlight {
-            background-color: #FEF08A;
-            padding: 0 4px;
-            border-radius: 4px;
+        .filter-btn {
+            border: none;
+            outline: none;
+            padding: 10px 22px;
+            background-color: #e0e0e0;
+            color: var(--text-muted);
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
-
-        .card-footer {
-            padding: 1.5rem;
-            background-color: #F9FAFB;
-            border-top: 1px solid #E5E7EB;
-        }
-
-        .map-btn {
-            display: block;
-            width: 100%;
-            padding: 0.75rem;
+        
+        .filter-btn.active {
             background-color: var(--primary);
             color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 0.5rem;
+            box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+        }
+        
+        h2.section-title {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin: 20px 0 12px 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+        
+        .rating {
+            background: #fff8e1;
+            color: #f57f17;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        
+        .info-group {
+            margin-bottom: 8px;
+        }
+        
+        .label {
+            display: inline-block;
+            font-size: 0.75rem;
             font-weight: 600;
-            transition: background-color 0.2s;
+            color: var(--primary);
+            background: var(--tag-bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+        }
+        
+        .menu {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+        
+        .desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            background: #f9f9f9;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+        
+        mark {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 0 4px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+        
+        .link-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 14px;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: opacity 0.2s;
+        }
+        
+        .link-btn:active {
+            opacity: 0.85;
         }
 
-        .map-btn:hover {
-            background-color: var(--primary-hover);
+        /* 맨 위로 가기(Top) 버튼 */
+        #topBtn {
+            position: fixed;
+            bottom: 24px;
+            right: 20px;
+            z-index: 9999;
+            width: 48px;
+            height: 48px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.25s ease-in-out;
         }
 
-        @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
-            }
+        #topBtn.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
     </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 </head>
 <body>
-
-    <header>
-        <h1>나트랑 & 깜란 맛집 가이드</h1>
-        <p>가족 여행을 위한 완벽한 식당과 카페 모음</p>
-    </header>
-
     <div class="container">
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">전체보기</button>
-            <button class="filter-btn" data-filter="restaurant">식당</button>
-            <button class="filter-btn" data-filter="cafe">카페</button>
+        <div class="header">
+            <h1>나트랑 식당, 카페</h1>
+            <div class="tags">
+                <span class="tag">#나트랑</span>
+                <span class="tag">#깜란</span>
+                <span class="tag">#가족여행</span>
+                <span class="tag">#베트남</span>
+            </div>
         </div>
 
-        <div class="grid" id="cardGrid">
-            <!-- Cards will be dynamically inserted here -->
+        <div class="filter-container">
+            <button class="filter-btn active" data-category="all">전체</button>
+            <button class="filter-btn" data-category="restaurant">식당</button>
+            <button class="filter-btn" data-category="cafe">카페</button>
+        </div>
+
+        <div id="restaurant-section">
+            <h2 class="section-title">🍽️ 식당</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">1. 마담프엉 (Madame Phuong)</h3>
+                    <div class="rating">⭐ 4.6</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">반쎄오, 분짜, 모닝글로리 볶음</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내 중심가에 위치해 접근성이 우수하며 향신료가 강하지 않아 베트남 음식을 처음 접하는 여행객도 호불호 없이 깔끔하게 즐길 수 있는 곳.
+                </div>
+                <a href="https://maps.app.goo.gl/PceGFT1atutWuUGA8?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">2. JJ 씨푸드 (JJ Seafood)</h3>
+                    <div class="rating">⭐ 4.8</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">치즈 가리비 구이, 블랙타이거 새우구이, 맛조개 볶음</span>
+                </div>
+                <div class="desc">
+                    여행자 거리 중심에 있어 접근성이 좋고, 대형 수조에서 신선한 해산물을 직접 골라 정찰제로 계산하는 시스템. 한국어 메뉴판이 완비되어 주문이 편리함.
+                </div>
+                <a href="https://maps.app.goo.gl/AvWP33Mmaa8sPtRn7?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">3. 안토이 (An Thoi)</h3>
+                    <div class="rating">⭐ 4.8</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">분짜 스프링롤 세트, 소곱창 쌀국수, 파인애플 볶음밥</span>
+                </div>
+                <div class="desc">
+                    노란색 외관의 세련된 로컬 감성 인테리어와 강력한 에어컨 시설을 자랑함. 길거리 식당의 위생 걱정 없이 청결한 환경에서 수준 높은 베트남 요리를 맛볼 수 있음.
+                </div>
+                <a href="https://maps.app.goo.gl/24vFWzjTghsod4zq7?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">4. 빈산 (Nhà hàng Vịnh Xanh)</h3>
+                    <div class="rating">⭐ 4.6</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">랍스터 치즈/갈릭 구이, 맛조개 볶음, 파인애플 볶음밥, 가리비 파기름 구이</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내에서 한국인 여행객들에게 가장 인지도가 높은 대표적인 해산물 전문점 중 하나입니다. 야외 좌석뿐만 아니라 시원한 에어컨이 가동되는 실내 공간(에어컨 룸)이 완비되어 있어 쾌적하게 식사할 수 있습니다. 깨끗하게 관리되는 대형 수조에서 싱싱한 해산물을 직접 고를 수 있으며, 정찰제로 운영되어 흥정이나 바가지 걱정 없이 마음 편히 해산물 만찬을 즐기기 좋습니다.
+                </div>
+                <a href="https://maps.google.com/?q=Nhà+hàng+Vịnh+Xanh+Nha+Trang" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">5. 반미 꽝빈 (Bánh Mì Quang Vinh)</h3>
+                    <div class="rating">⭐ 4.5</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">믹스 반미(Thập Cẩm), 숯불고기 반미, 계란 반미</span>
+                </div>
+                <div class="desc">
+                    나트랑 3대 반미 맛집으로 불릴 정도로 현지인과 관광객 모두에게 인기가 많은 로컬 찐맛집입니다. 겉은 바삭하고 속은 촉촉한 바게트 안에 숯불 향이 가득한 고기와 특제 소스, 신선한 채소가 듬뿍 들어가 든든하고 맛있는 한 끼를 제공합니다. (<mark>에어컨이 가동되는 실내 매장이 아니므로</mark> 포장(테이크아웃)하여 시원한 숙소나 카페 등에서 드시는 것을 추천합니다.)
+                </div>
+                <a href="https://maps.google.com/?q=Bánh+Mì+Quang+Vinh+Nha+Trang" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">6. 랑짜이 해산물 식당</h3>
+                    <div class="rating">⭐ 4.9</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">깜란</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">콤보 메뉴 (랍스터, 타이거 새우, 모닝글로리 볶음, 해산물 볶음밥 등)</span>
+                </div>
+                <div class="desc">
+                    나트랑 깜란 공항 근처에 위치한 해산물 전문점입니다. 깜란 지역 내 주요 리조트까지 픽업 및 샌딩 서비스를 제공하여 여행객들이 편리하게 방문할 수 있는 것이 큰 장점입니다. 푸짐한 해산물을 합리적으로 맛볼 수 있는 세트(콤보) 구성이 특히 인기가 많습니다. <mark>에어컨 가동되는 VIP룸이 따로 있음</mark>.
+                </div>
+                <a href="https://maps.app.goo.gl/LBgM6rmS3s9aT8un8?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">7. 하랑식당 (HARANG)</h3>
+                    <div class="rating">⭐ 4.7</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">깜란 · 한식당</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">삼겹살 등 구이류, 안주류, 분식류 (다양한 한식)</span>
+                </div>
+                <div class="desc">
+                    나트랑 공항 근처(깜란 지역)에 위치한 퀄리티 높은 한식당입니다. 깜란 지역 내 무료 픽업 및 배달 서비스를 제공하여 접근성이 좋습니다. 경험 많은 한국인 주방장이 조리하며, 밑반찬 무제한 리필과 직원이 직접 고기를 구워주는 서비스 등 뛰어난 편의를 제공해 부모님을 모시고 가거나 현지식이 물릴 때 방문하기 좋습니다.<br>(카카오톡: harang0966)
+                </div>
+                <a href="https://maps.app.goo.gl/W7i1tWi3zhEnLBQT7?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">8. 씀모이 가든</h3>
+                    <div class="rating">⭐ 4.8</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">넴느엉, 반쎄오, 분짜, 맛조개 모닝글로리 볶음, 바베큐 폭립</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내에 위치한 깔끔하고 쾌적한(전 좌석 에어컨 완비) 베트남 가정식 맛집입니다. 한국어 메뉴판이 잘 되어 있고 직원들이 친절하여 한국인 관광객들에게 매우 인기가 높습니다. 위생적이고 고급스러운 분위기에서 로컬 음식을 즐기고 싶은 가족 단위 여행객에게 적극 추천하는 곳입니다.
+                </div>
+                <a href="https://maps.app.goo.gl/EDtZiwbjnNoK8iYu6?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">9. 루엉쏭깡</h3>
+                    <div class="rating">⭐ 4.9</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">랍스터 요리(수조 직접 선택), 맛조개 모닝글로리 볶음, 버터갈릭 새우구이</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내에 위치한 가성비 뛰어난 해산물 전문점입니다. 수조에서 신선한 해산물을 직접 고르고 원하는 소스로 조리 방식을 선택할 수 있는 것이 특징입니다. 한국어가 가능한 직원이 있어 주문이 편리하며, 시내 픽업 및 샌딩 서비스도 제공합니다. 카드 결제 시 수수료가 없습니다. <mark>에어컨 없음</mark>
+                </div>
+                <a href="https://maps.app.goo.gl/NQUJfuuu5vzkF7t16?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">10. K.HOUSE Restaurant</h3>
+                    <div class="rating">⭐ 4.9</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내 · 한식당</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">랍스터 치즈구이, 소고기 스테이크, 칠리크랩, 떡볶이, 김치볶음밥</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내 쩐푸(Trần Phú) 해변 길에 위치해 탁 트인 오션뷰를 감상할 수 있는 퓨전 한식당 겸 해산물 레스토랑입니다. 한국인 사장님이 운영하여 소통이 원활하고 서비스가 세심합니다. 해산물 요리와 익숙한 한식 메뉴를 함께 즐길 수 있어 아이를 동반한 가족 여행객에게 인기가 많습니다. 새벽 2시까지 운영합니다.
+                </div>
+                <a href="https://maps.app.goo.gl/K45KyS5zz8V9r7yn9?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">11. 나트랑 돌산 DA NUI</h3>
+                    <div class="rating">⭐ 4.9</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내 · 한식당</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">삼겹살, 소고기 구이, 김치찌개, 냉면 등 한식 메뉴</span>
+                </div>
+                <div class="desc">
+                    나트랑에 위치한 한국식 숯불구이(BBQ) 전문점입니다. 한국과 다름없는 푸짐한 밑반찬과 신선한 고기를 즐길 수 있으며, 직원이 고기를 직접 구워주는 서비스가 제공되어 가족 단위 여행객이나 부모님을 모시고 가기 편안합니다. 베트남 현지식이 물릴 때 든든하게 체력을 보충하기 좋은 식당입니다.
+                </div>
+                <a href="https://maps.app.goo.gl/SKtQeoUCmh5RSBKs9?g_st=akt" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">12. 분까 하이까 (Bún Cá Hai Cá)</h3>
+                    <div class="rating">⭐ 4.4</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">나트랑 시내</span>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">오징어 어묵 쌀국수, 해파리 어묵 쌀국수</span>
+                </div>
+                <div class="desc">
+                    나트랑 시내에 위치한 유명한 로컬 쌀국수 맛집입니다. 맑고 시원한 국물에 쫄깃한 수제 오징어 어묵과 오독오독한 식감의 해파리가 들어간 국수가 대표 메뉴입니다. 향신료 맛이 거의 없어 한국인 입맛에 잘 맞고, 조식이나 해장용으로 인기가 많습니다. (<mark>에어컨이 없는 야외 개방형</mark> 로컬 식당입니다.)
+                </div>
+                <a href="https://www.google.com/maps?q=%EB%B6%84%EA%B9%8C+%ED%95%98%EC%9D%B4%EA%B9%8C(%EC%98%A4%EC%A7%95%EC%96%B4%EC%96%B4%EB%AC%B5%EC%8C%80%EA%B5%AD%EC%88%98)+156+Nguy%E1%BB%85n+Th%E1%BB%8B+Minh+Khai,+Nha+Trang,+Kh%C3%A1nh+H%C3%B2a+650000+%EB%B2%A0%ED%8A%B8%EB%82%A8&ftid=0x3170677d6beb846b:0x69d21147ca97cd4b&entry=gps&shh=CAE&lucs=,94297699,94231188,94280568,47071704,94218641,94282134,100813469,94286869,100820247&g_ep=CAISEjI2LjI4LjAuOTQyOTUxNTM4MBgAIIgnKlMsOTQyOTc2OTksOTQyMzExODgsOTQyODA1NjgsNDcwNzE3MDQsOTQyMTg2NDEsOTQyODIxMzQsMTAwODEzNDY5LDk0Mjg2ODY5LDEwMDgyMDI0N0ICS1I%3D&skid=d577dd56-fa8a-45c9-90ef-c83096e28b2c&g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+        </div>
+
+        <div id="cafe-section">
+            <h2 class="section-title">☕ 카페</h2>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">1. CCCP 커피 (CCCP Coffee)</h3>
+                    <div class="rating">⭐ 4.6</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">코코넛 커피, 박시우(베트남식 연유커피), 망고 스무디</span>
+                </div>
+                <div class="desc">
+                    한국인 여행객들의 나트랑 필수 코스로 불릴 만큼 압도적인 인기를 자랑하는 곳입니다. 빵빵한 에어컨과 넓고 푹신한 소파 좌석을 갖추고 있어 한낮의 더위를 피하기 가장 완벽한 카페입니다.
+                </div>
+                <a href="https://maps.app.goo.gl/yT2caae8rjPSiLau5?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">2. Than - The Greenery</h3>
+                    <div class="rating">⭐ 4.7</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">까눌레, 머핀, 과일 차, 스페셜티 커피</span>
+                </div>
+                <div class="desc">
+                    한국형 카페, 외부에서는 상상할 수 없는 반전 매력을 지닌 감각적인 카페입니다. 1층은 미니멀한 화이트 톤으로 깔끔하게 꾸며져 있으며, 2층은 그랜드 캐년을 모티브로 한 압도적이고 독특한 인테리어를 자랑합니다. 시원한 에어컨 바람 아래 쾌적하게 맛있는 디저트를 즐기며 인생 사진을 남기기 좋습니다.
+                </div>
+                <a href="https://maps.app.goo.gl/owuaUXQmLSWNBk2f8?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">3. 올라 카페(Ola Cafe)</h3>
+                    <div class="rating">⭐ 4.8</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">소금 커피, 코코넛 커피</span>
+                </div>
+                <div class="desc">
+                    핑크빛 동굴 컨셉 인테리어, 다양한 포토존, 에어컨 있음
+                </div>
+                <a href="https://www.google.com/maps/place/%EC%98%AC%EB%9D%BC+%EC%B9%B4%ED%8E%98/@12.2403402,109.1825347,15.5z/data=!4m6!3m5!1s0x31705df38e04ee69:0xf8e3d3ccb64fe8e3!8m2!3d12.2401569!4d109.1867309!16s%2Fg%2F11t2lxrp9f?hl=ko-KR&entry=ttu&g_ep=EgoyMDI2MDcyMi4wIKXMDSoASAFQAw%3D%3D" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">4. 정글커피</h3>
+                    <div class="rating">⭐ 4.7</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">코코넛 커피, 망고 스무디</span>
+                </div>
+                <div class="desc">
+                    도심 속 식물원(정글) 컨셉의 인테리어, 사진 찍기 좋은 포토존, 실내 에어컨 완비
+                </div>
+                <a href="https://www.google.com/maps/place/%EC%A0%95%EA%B8%80%EC%BB%A4%ED%94%BC(jungle+coffee)/@12.245073,109.1897668,17z/data=!3m1!4b1!4m6!3m5!1s0x3170670022cef20f:0xb3a1e912f8bbc677!8m2!3d12.245073!4d109.1897668!16s%2Fg%2F11wfx0glwy?hl=ko-KR&entry=ttu&g_ep=EgoyMDI2MDcyMi4wIKXMDSoASAFQAw%3D%3D" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">5. 만세커피(Manse Coffee & Drinks)</h3>
+                    <div class="rating">⭐ 4.8</div>
+                </div>
+                <div class="info-group">
+                    <span class="label">추천 메뉴</span>
+                    <span class="menu">스모크 달랏, 그린 라이스 하노이, 망고 유자 스무디</span>
+                </div>
+                <div class="desc">
+                    클래식하고 따뜻한 분위기, 넓고 여유로운 좌석, 실내 에어컨 및 와이파이 완비
+                </div>
+                <a href="https://maps.app.goo.gl/3mGeUVAFu1dkNbC4A?g_st=ic" class="link-btn" target="_blank">구글맵 보기</a>
+            </div>
         </div>
     </div>
 
+    <button id="topBtn" aria-label="맨 위로 가기">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 15l-6-6-6 6"/>
+        </svg>
+    </button>
+
     <script>
-        const data = [
-            // Restaurant 1
-            {
-                type: 'restaurant',
-                title: '마담프엉 (Madame Phuong)',
-                location: '나트랑 시내',
-                rating: '4.6',
-                menu: ['반쎄오', '분짜', '모닝글로리 볶음'],
-                features: '나트랑 시내 중심가에 위치해 접근성이 우수하며 향신료가 강하지 않아 베트남 음식을 처음 접하는 여행객도 호불호 없이 깔끔하게 즐길 수 있는 곳.',
-                link: 'https://maps.app.goo.gl/PceGFT1atutWuUGA8?g_st=ic'
-            },
-            {
-                type: 'restaurant',
-                title: 'JJ 씨푸드 (JJ Seafood)',
-                location: '나트랑 시내',
-                rating: '4.8',
-                menu: ['치즈 가리비 구이', '블랙타이거 새우구이', '맛조개 볶음'],
-                features: '여행자 거리 중심에 있어 접근성이 좋고, 대형 수조에서 신선한 해산물을 직접 골라 정찰제로 계산하는 시스템. 한국어 메뉴판이 완비되어 주문이 편리함.',
-                link: 'https://maps.app.goo.gl/AvWP33Mmaa8sPtRn7?g_st=ic'
-            },
-            {
-                type: 'restaurant',
-                title: '안토이 (An Thoi)',
-                location: '나트랑 시내',
-                rating: '4.8',
-                menu: ['분짜 스프링롤 세트', '소곱창 쌀국수', '파인애플 볶음밥'],
-                features: '노란색 외관의 세련된 로컬 감성 인테리어와 강력한 에어컨 시설을 자랑함. 길거리 식당의 위생 걱정 없이 청결한 환경에서 수준 높은 베트남 요리를 맛볼 수 있음.',
-                link: 'https://maps.app.goo.gl/24vFWzjTghsod4zq7?g_st=ic'
-            },
-            {
-                type: 'restaurant',
-                title: '빈산 (Nhà hàng Vịnh Xanh)',
-                location: '나트랑 시내',
-                rating: '4.6',
-                menu: ['랍스터 치즈/갈릭 구이', '맛조개 볶음', '파인애플 볶음밥', '가리비 파기름 구이'],
-                features: '한국인 여행객들에게 가장 인지도가 높은 대표적인 해산물 전문점 중 하나. 에어컨이 가동되는 실내 공간 완비. 정찰제로 흥정이나 바가지 걱정 없음.',
-                link: 'https://maps.google.com/?q=Nhà+hàng+Vịnh+Xanh+Nha+Trang'
-            },
-            {
-                type: 'restaurant',
-                title: '반미 꽝빈 (Bánh Mì Quang Vinh)',
-                location: '나트랑 시내',
-                rating: '4.5',
-                menu: ['믹스 반미', '숯불고기 반미', '계란 반미'],
-                features: '나트랑 3대 반미 맛집. 겉바속촉 바게트 안에 숯불 향 가득한 고기와 특제 소스. <span class="highlight">에어컨이 가동되는 실내 매장이 아니므로</span> 포장 추천.',
-                link: 'https://maps.google.com/?q=Bánh+Mì+Quang+Vinh+Nha+Trang'
-            },
-            {
-                type: 'restaurant',
-                title: '랑짜이 해산물 식당',
-                location: '깜란',
-                rating: '4.9',
-                menu: ['콤보 메뉴'],
-                features: '깜란 공항 근처 해산물 전문점. 깜란 지역 내 주요 리조트 픽업/샌딩 제공. 합리적인 세트 구성 인기. <span class="highlight">에어컨 가동되는 VIP룸</span> 있음.',
-                link: 'https://maps.app.goo.gl/LBgM6rmS3s9aT8un8?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: '하랑식당 (HARANG)',
-                location: '깜란, 한식당',
-                rating: '4.7',
-                menu: ['삼겹살 등 구이류', '안주류', '분식류'],
-                features: '깜란 지역 내 무료 픽업 및 배달 서비스. 밑반찬 무제한 리필과 직원이 직접 고기를 구워주는 서비스. 부모님 모시고 가기 좋음. (카톡: harang0966)',
-                link: 'https://maps.app.goo.gl/W7i1tWi3zhEnLBQT7?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: '씀모이 가든',
-                location: '나트랑 시내',
-                rating: '4.8',
-                menu: ['넴느엉', '반쎄오', '분짜', '맛조개 모닝글로리 볶음', '바베큐 폭립'],
-                features: '깔끔하고 쾌적한(전 좌석 에어컨 완비) 베트남 가정식 맛집. 한국어 메뉴판 완비, 위생적이고 고급스러운 분위기로 가족 단위 여행객에게 적극 추천.',
-                link: 'https://maps.app.goo.gl/EDtZiwbjnNoK8iYu6?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: '루엉쏭깡',
-                location: '나트랑 시내',
-                rating: '4.9',
-                menu: ['랍스터 요리', '맛조개 모닝글로리 볶음', '버터갈릭 새우구이', '가리비 치즈구이', '해산물 볶음밥'],
-                features: '수조에서 신선한 해산물을 직접 고르고 원하는 소스로 조리 방식을 선택. 시내 픽업 및 샌딩 제공. 카드 결제 시 수수료 없음. <span class="highlight">에어컨 없음</span>.',
-                link: 'https://maps.app.goo.gl/NQUJfuuu5vzkF7t16?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: 'K.HOUSE Restaurant',
-                location: '나트랑 시내, 한식당',
-                rating: '4.9',
-                menu: ['랍스터 치즈구이', '소고기 스테이크', '칠리크랩', '떡볶이', '김치볶음밥'],
-                features: '쩐푸 해변 길에 위치해 탁 트인 오션뷰. 퓨전 한식당 겸 해산물 레스토랑. 새벽 2시까지 운영하여 야식 즐기기 좋음.',
-                link: 'https://maps.app.goo.gl/K45KyS5zz8V9r7yn9?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: '나트랑 돌산 DA NUI',
-                location: '나트랑 시내, 한식당',
-                rating: '4.9',
-                menu: ['삼겹살', '소고기 구이', '김치찌개', '냉면'],
-                features: '한국식 숯불구이(BBQ) 전문점. 한국과 다름없는 푸짐한 밑반찬. 직원이 고기를 직접 구워주어 편안함.',
-                link: 'https://maps.app.goo.gl/SKtQeoUCmh5RSBKs9?g_st=akt'
-            },
-            {
-                type: 'restaurant',
-                title: '분까 하이까 (Bún Cá Hai Cá)',
-                location: '나트랑 시내',
-                rating: '4.4',
-                menu: ['오징어 어묵 쌀국수', '해파리 어묵 쌀국수'],
-                features: '로컬 쌀국수 맛집. 향신료 맛이 거의 없어 한국인 입맛에 잘 맞음. 아침 일찍부터 영업. <span class="highlight">에어컨이 없는 야외 개방형</span> 식당.',
-                link: 'https://www.google.com/maps?q=%EB%B6%84%EA%B9%8C+%ED%95%98%EC%9D%B4%EA%B9%8C'
-            },
-            // Cafe
-            {
-                type: 'cafe',
-                title: 'CCCP 커피 (CCCP Coffee)',
-                location: '나트랑 시내',
-                rating: '4.6',
-                menu: ['코코넛 커피', '박시우(연유커피)', '망고 스무디'],
-                features: '한국인 필수 코스. 빵빵한 에어컨과 넓고 푹신한 소파 좌석. 한낮의 더위를 피하기 완벽한 카페.',
-                link: 'https://maps.app.goo.gl/yT2caae8rjPSiLau5?g_st=ic'
-            },
-            {
-                type: 'cafe',
-                title: 'Than - The Greenery',
-                location: '나트랑 시내',
-                rating: '4.7',
-                menu: ['까눌레', '머핀', '과일 차', '스페셜티 커피'],
-                features: '한국형 카페. 1층은 화이트 톤, 2층은 그랜드 캐년 모티브 독특한 인테리어. 에어컨 완비, 인생 사진 남기기 좋음.',
-                link: 'https://maps.app.goo.gl/owuaUXQmLSWNBk2f8?g_st=ic'
-            },
-            {
-                type: 'cafe',
-                title: '올라 카페 (Ola Cafe)',
-                location: '나트랑 시내',
-                rating: '4.8',
-                menu: ['소금 커피', '코코넛 커피'],
-                features: '핑크빛 동굴 컨셉 인테리어, 다양한 포토존, 에어컨 있음.',
-                link: 'https://www.google.com/maps/place/%EC%98%AC%EB%9D%BC+%EC%B9%B4%ED%8E%98/@12.2403402,109.1825347,15.5z/data=!4m6!3m5!1s0x31705df38e04ee69:0xf8e3d3ccb64fe8e3!8m2!3d12.2401569!4d109.1867309!16s%2Fg%2F11t2lxrp9f?hl=ko-KR&entry=ttu&g_ep=EgoyMDI2MDcyMi4wIKXMDSoASAFQAw%3D%3D'
-            },
-            {
-                type: 'cafe',
-                title: '정글커피',
-                location: '나트랑 시내',
-                rating: '4.7',
-                menu: ['코코넛 커피', '망고 스무디'],
-                features: '도심 속 식물원(정글) 컨셉의 인테리어, 사진 찍기 좋은 포토존, 실내 에어컨 완비.',
-                link: 'https://www.google.com/maps/place/%EC%A0%95%EA%B8%80%EC%BB%A4%ED%94%BC(jungle+coffee)/@12.245073,109.1897668,17z/data=!3m1!4b1!4m6!3m5!1s0x3170670022cef20f:0xb3a1e912f8bbc677!8m2!3d12.245073!4d109.1897668!16s%2Fg%2F11wfx0glwy?hl=ko-KR&entry=ttu&g_ep=EgoyMDI2MDcyMi4wIKXMDSoASAFQAw%3D%3D'
+        document.addEventListener("DOMContentLoaded", function () {
+            var filterBtns = document.querySelectorAll(".filter-btn");
+            var restSection = document.getElementById("restaurant-section");
+            var cafeSection = document.getElementById("cafe-section");
+            var topBtn = document.getElementById("topBtn");
+
+            // 1. 필터링 버튼 동작 (이벤트 리스너 직접 바인딩)
+            filterBtns.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    filterBtns.forEach(function (b) { b.classList.remove("active"); });
+                    this.classList.add("active");
+
+                    var category = this.getAttribute("data-category");
+
+                    if (category === "all") {
+                        restSection.style.display = "block";
+                        cafeSection.style.display = "block";
+                    } else if (category === "restaurant") {
+                        restSection.style.display = "block";
+                        cafeSection.style.display = "none";
+                    } else if (category === "cafe") {
+                        restSection.style.display = "none";
+                        cafeSection.style.display = "block";
+                    }
+
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            });
+
+            // 2. 스크롤 감지 및 Top 버튼 표시/숨김 (모바일 기기 호환)
+            function checkScroll() {
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                if (scrollTop > 150) {
+                    topBtn.classList.add("show");
+                } else {
+                    topBtn.classList.remove("show");
+                }
             }
-        ];
 
-        function renderCards(filterType) {
-            const grid = document.getElementById('cardGrid');
-            grid.innerHTML = ''; // Clear existing cards
+            window.addEventListener("scroll", checkScroll, { passive: true });
+            window.addEventListener("resize", checkScroll, { passive: true });
 
-            const filteredData = data.filter(item => filterType === 'all' || item.type === filterType);
-
-            filteredData.forEach(item => {
-                const isRestaurant = item.type === 'restaurant';
-                const badgeClass = isRestaurant ? 'badge-restaurant' : 'badge-cafe';
-                const badgeText = isRestaurant ? '식당' : '카페';
-
-                const menuHtml = item.menu.map(m => `<span class="menu-tag">${m}</span>`).join('');
-                
-                const cardHtml = `
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h3 class="card-title">${item.title}</h3>
-                                <div style="font-size: 0.85rem; color: #6B7280; margin-bottom: 0.5rem;">${item.location}</div>
-                                <span class="category-badge ${badgeClass}">${badgeText}</span>
-                            </div>
-                            <div class="rating">
-                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                                ${item.rating}
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="section-title">추천 메뉴</div>
-                            <div class="menu-tags">
-                                ${menuHtml}
-                            </div>
-                            <div class="section-title">특징</div>
-                            <div class="features">${item.features}</div>
-                        </div>
-                        <div class="card-footer">
-                            <a href="${item.link}" target="_blank" class="map-btn">
-                                구글 맵에서 보기
-                            </a>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHtml;
-            });
-        }
-
-        // Initialize with 'all'
-        renderCards('all');
-
-        // Filter button click logic
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                // Remove active class from all
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                // Add active class to clicked
-                e.target.classList.add('active');
-                
-                const filter = e.target.getAttribute('data-filter');
-                renderCards(filter);
-            });
+            // 3. Top 버튼 클릭 시 맨 위로 스크롤
+            if (topBtn) {
+                topBtn.addEventListener("click", function () {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            }
         });
     </script>
 </body>

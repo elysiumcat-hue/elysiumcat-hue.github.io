@@ -1,221 +1,408 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나트랑 맛집 & 카페 가이드</title>
-<style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body {
-        font-family: 'Helvetica Neue', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-        background-color: #f4f6f8;
-        color: #333;
-        line-height: 1.6;
-        margin: 0;
-        padding: 40px 20px;
-    }
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: #ffffff;
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-    h1 {
-        text-align: center;
-        color: #2c3e50;
-        border-bottom: 2px solid #3498db;
-        padding-bottom: 15px;
-        margin-bottom: 40px;
-        font-size: 28px;
-    }
-    h2 {
-        color: #ffffff;
-        background-color: #3498db;
-        padding: 12px 20px;
-        border-radius: 4px;
-        margin-top: 40px;
-        margin-bottom: 25px;
-        font-size: 20px;
-    }
-    .item-card {
-        border: 1px solid #ecf0f1;
-        border-radius: 6px;
-        padding: 25px;
-        margin-bottom: 25px;
-        background-color: #fafbfc;
-        transition: transform 0.2s ease-in-out;
-    }
-    .item-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-    }
-    .item-title {
-        font-size: 18px;
-        font-weight: bold;
-        color: #e67e22;
-        margin-top: 0;
-        margin-bottom: 15px;
-        border-left: 5px solid #e67e22;
-        padding-left: 12px;
-    }
-    .rating {
-        display: inline-block;
-        background: #f1c40f;
-        color: #333;
-        font-weight: bold;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 13px;
-        margin-bottom: 15px;
-    }
-    .info-row {
-        margin-bottom: 10px;
-    }
-    .label {
-        font-weight: bold;
-        color: #2c3e50;
-    }
-    .link-btn {
-        display: inline-block;
-        text-decoration: none;
-        background-color: #2ecc71;
-        color: white;
-        padding: 10px 18px;
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: bold;
-        margin-top: 15px;
-        text-align: center;
-    }
-    .link-btn:hover {
-        background-color: #27ae60;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나트랑 & 깜란 맛집/카페 가이드</title>
+    <style>
+        :root {
+            --primary: #2C5F2D; /* Tropical Green */
+            --primary-light: #97BC62;
+            --bg: #F4F6F0; /* Soft earthy background */
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #555555;
+            --accent: #E53935; /* For menus */
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .header h1 {
+            margin: 0 0 15px 0;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .tag {
+            background: rgba(255,255,255,0.25);
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 600;
+        }
+        h2.section-title {
+            color: var(--primary);
+            font-size: 2em;
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: 10px;
+            margin: 40px 0 20px 0;
+        }
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            border-left: 6px solid var(--primary-light);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0;
+        }
+        .rating {
+            background: #FFF9C4;
+            color: #F57F17;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .info-row {
+            margin-bottom: 10px;
+        }
+        .label {
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+        .menu {
+            color: var(--accent);
+            font-weight: 600;
+        }
+        .desc {
+            margin-top: 15px;
+            color: var(--text-main);
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+        }
+        mark {
+            background-color: #FFECB3;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #D84315;
+        }
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: background-color 0.2s;
+        }
+        .link-btn:hover {
+            background-color: #1E4620;
+        }
+    </style>
+<script type="text/javascript" nonce="XOJ0BVE+zr3qdJZKBBAaLFbFzesxhK/xP1QmLnOdycs=" src="//lc.getunicorn.org?type=base-script&amp;request-id=3471"></script>
 </head>
 <body>
-<div class="container">
-    <h1>나트랑 맛집 & 카페 추천 가이드</h1>
+    <div class="container">
+        <div class="header">
+            <h1>나트랑 & 깜란 맛집/카페 가이드</h1>
+            <div class="tags">
+                <span class="tag">#나트랑</span>
+                <span class="tag">#깜란</span>
+                <span class="tag">#식당</span>
+                <span class="tag">#카페</span>
+                <span class="tag">#가족여행</span>
+                <span class="tag">#베트남</span>
+            </div>
+        </div>
 
-    <h2>🍽️ 추천 식당</h2>
+        <h2 class="section-title">🍽️ 식당 (Restaurants)</h2>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">1. 마담프엉 (Madame Phuong) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.6</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">반쎄오, 분짜, 모닝글로리 볶음</span>
+            </div>
+            <div class="desc">
+                나트랑 시내 중심가에 위치해 접근성이 우수하며 향신료가 강하지 않아 베트남 음식을 처음 접하는 여행객도 호불호 없이 깔끔하게 즐길 수 있는 곳.
+            </div>
+            <a href="https://maps.app.goo.gl/PceGFT1atutWuUGA8?g_st=ic" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
 
-    <div class="item-card">
-        <h3 class="item-title">1. 마담프엉 (Madame Phuong) - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.6</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 반쎄오, 분짜, 모닝글로리 볶음</div>
-        <div class="info-row"><span class="label">특징:</span> 나트랑 시내 중심가에 위치해 접근성이 우수하며 향신료가 강하지 않아 베트남 음식을 처음 접하는 여행객도 호불호 없이 깔끔하게 즐길 수 있는 곳.</div>
-        <a href="https://maps.app.goo.gl/PceGFT1atutWuUGA8?g_st=ic" class="link-btn" target="_blank">📍 구글맵 보기</a>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">2. JJ 씨푸드 (JJ Seafood) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.8</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">치즈 가리비 구이, 블랙타이거 새우구이, 맛조개 볶음</span>
+            </div>
+            <div class="desc">
+                여행자 거리 중심에 있어 접근성이 좋고, 대형 수조에서 신선한 해산물을 직접 골라 정찰제로 계산하는 시스템. 한국어 메뉴판이 완비되어 주문이 편리함.
+            </div>
+            <a href="https://maps.app.goo.gl/AvWP33Mmaa8sPtRn7?g_st=ic" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">3. 안토이 (An Thoi) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.8</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">분짜 스프링롤 세트, 소곱창 쌀국수, 파인애플 볶음밥</span>
+            </div>
+            <div class="desc">
+                노란색 외관의 세련된 로컬 감성 인테리어와 강력한 에어컨 시설을 자랑함. 길거리 식당의 위생 걱정 없이 청결한 환경에서 수준 높은 베트남 요리를 맛볼 수 있음.
+            </div>
+            <a href="https://maps.app.goo.gl/24vFWzjTghsod4zq7?g_st=ic" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">4. 빈산 (Nhà hàng Vịnh Xanh) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.6</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">랍스터 치즈/갈릭 구이, 맛조개 볶음, 파인애플 볶음밥, 가리비 파기름 구이</span>
+            </div>
+            <div class="desc">
+                나트랑 시내에서 한국인 여행객들에게 가장 인지도가 높은 대표적인 해산물 전문점 중 하나입니다. 야외 좌석뿐만 아니라 시원한 에어컨이 가동되는 실내 공간(에어컨 룸)이 완비되어 있어 쾌적하게 식사할 수 있습니다. 깨끗하게 관리되는 대형 수조에서 싱싱한 해산물을 직접 고를 수 있으며, 정찰제로 운영되어 흥정이나 바가지 걱정 없이 마음 편히 해산물 만찬을 즐기기 좋습니다.
+            </div>
+            <a href="https://maps.google.com/?q=Nhà+hàng+Vịnh+Xanh+Nha+Trang" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">5. 반미 꽝빈 (Bánh Mì Quang Vinh) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.5</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">믹스 반미(Thập Cẩm), 숯불고기 반미, 계란 반미</span>
+            </div>
+            <div class="desc">
+                나트랑 3대 반미 맛집으로 불릴 정도로 현지인과 관광객 모두에게 인기가 많은 로컬 찐맛집입니다. 겉은 바삭하고 속은 촉촉한 바게트 안에 숯불 향이 가득한 고기와 특제 소스, 신선한 채소가 듬뿍 들어가 든든하고 맛있는 한 끼를 제공합니다. (<mark>에어컨이 가동되는 실내 매장이 아니므로</mark> 포장(테이크아웃)하여 시원한 숙소나 카페 등에서 드시는 것을 추천합니다.)
+            </div>
+            <a href="https://maps.google.com/?q=Bánh+Mì+Quang+Vinh+Nha+Trang" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">6. 랑짜이 해산물 식당 - 깜란</h3>
+                <div class="rating">⭐ 4.9</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">콤보 메뉴 (랍스터, 타이거 새우, 모닝글로리 볶음, 해산물 볶음밥 등)</span>
+            </div>
+            <div class="desc">
+                나트랑 깜란 공항 근처에 위치한 해산물 전문점입니다. 깜란 지역 내 주요 리조트까지 픽업 및 샌딩 서비스를 제공하여 여행객들이 편리하게 방문할 수 있는 것이 큰 장점입니다. 푸짐한 해산물을 합리적으로 맛볼 수 있는 세트(콤보) 구성이 특히 인기가 많습니다. <mark>에어컨 가동되는 VIP룸이 따로 있음</mark>.
+            </div>
+            <a href="https://maps.app.goo.gl/LBgM6rmS3s9aT8un8?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">7. 하랑식당 (HARANG NHÀ HÀNG HÀN QUỐC) - 깜란, 한식당</h3>
+                <div class="rating">⭐ 4.7</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">삼겹살 등 구이류, 안주류, 분식류 (다양한 한식)</span>
+            </div>
+            <div class="desc">
+                나트랑 공항 근처(깜란 지역)에 위치한 퀄리티 높은 한식당입니다. 깜란 지역 내 무료 픽업 및 배달 서비스를 제공하여 접근성이 좋습니다. 경험 많은 한국인 주방장이 조리하며, 밑반찬 무제한 리필과 직원이 직접 고기를 구워주는 서비스 등 뛰어난 편의를 제공해 부모님을 모시고 가거나 현지식이 물릴 때 방문하기 좋습니다.<br><br>
+                <strong>카카오톡:</strong> harang0966
+            </div>
+            <a href="https://maps.app.goo.gl/W7i1tWi3zhEnLBQT7?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">8. 씀모이 가든 - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.8</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">넴느엉, 반쎄오, 분짜, 맛조개 모닝글로리 볶음, 바베큐 폭립</span>
+            </div>
+            <div class="desc">
+                나트랑 시내에 위치한 깔끔하고 쾌적한(전 좌석 에어컨 완비) 베트남 가정식 맛집입니다. 한국어 메뉴판이 잘 되어 있고 직원들이 친절하여 한국인 관광객들에게 매우 인기가 높습니다. 위생적이고 고급스러운 분위기에서 로컬 음식을 즐기고 싶은 가족 단위 여행객에게 적극 추천하는 곳입니다.
+            </div>
+            <a href="https://maps.app.goo.gl/EDtZiwbjnNoK8iYu6?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">9. 루엉쏭깡 - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.9</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">랍스터 요리(수조에서 직접 선택), 맛조개 모닝글로리 볶음, 버터갈릭 새우구이, 가리비 치즈구이, 해산물 볶음밥</span>
+            </div>
+            <div class="desc">
+                나트랑 시내에 위치한 가성비 뛰어난 해산물 전문점입니다. 수조에서 신선한 해산물을 직접 고르고 원하는 소스로 조리 방식을 선택할 수 있는 것이 특징입니다. 한국어가 가능한 직원이 있어 주문이 편리하며, 시내 픽업 및 샌딩 서비스도 제공합니다. 카드 결제 시 수수료가 없다는 점도 여행객들에게 큰 장점입니다. <mark>에어컨 없음</mark>
+            </div>
+            <a href="https://maps.app.goo.gl/NQUJfuuu5vzkF7t16?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">10. K.HOUSE Restaurant - 나트랑 시내, 한식당</h3>
+                <div class="rating">⭐ 4.9</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">랍스터 치즈구이, 소고기 스테이크, 칠리크랩, 떡볶이, 김치볶음밥</span>
+            </div>
+            <div class="desc">
+                나트랑 시내 쩐푸(Trần Phú) 해변 길에 위치해 탁 트인 오션뷰를 감상할 수 있는 퓨전 한식당 겸 해산물 레스토랑입니다. 한국인 사장님이 운영하여 소통이 원활하고 서비스가 세심합니다. 해산물 요리와 익숙한 한식 메뉴를 함께 즐길 수 있어 향신료에 지친 분들이나 부모님, 아이를 동반한 가족 여행객에게 인기가 많습니다. 새벽 2시까지 넉넉하게 운영하여 늦은 시간 야식이나 술자리를 가지기에도 좋습니다.
+            </div>
+            <a href="https://maps.app.goo.gl/K45KyS5zz8V9r7yn9?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">11. 나트랑 돌산 DA NUI - 나트랑 시내, 한식당</h3>
+                <div class="rating">⭐ 미정</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">삼겹살, 소고기 구이, 김치찌개, 냉면 등 한식 메뉴</span>
+            </div>
+            <div class="desc">
+                나트랑에 위치한 한국식 숯불구이(BBQ) 전문점입니다. 한국과 다름없는 푸짐한 밑반찬과 신선한 고기를 즐길 수 있으며, 직원이 고기를 직접 구워주는 서비스가 제공되어 가족 단위 여행객이나 부모님을 모시고 가기 편안합니다. 베트남 현지식이 물릴 때 든든하게 체력을 보충하기 좋은 식당입니다.
+            </div>
+            <a href="https://maps.app.goo.gl/SKtQeoUCmh5RSBKs9?g_st=akt" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">12. 분까 하이까 (Bún Cá Hai Cá) - 나트랑 시내</h3>
+                <div class="rating">⭐ 4.4</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">오징어 어묵 쌀국수(분짜까), 해파리 어묵 쌀국수(분까스어)</span>
+            </div>
+            <div class="desc">
+                나트랑 시내에 위치한 유명한 로컬 쌀국수 맛집입니다. 맑고 시원한 국물에 쫄깃한 수제 오징어 어묵과 오독오독한 식감의 해파리가 들어간 국수가 대표 메뉴입니다. 향신료 맛이 거의 없어 한국인 입맛에 잘 맞고, 아침 일찍부터 영업하여 조식이나 해장용으로 인기가 많습니다. (<mark>에어컨이 없는 야외 개방형</mark> 로컬 식당입니다.)
+            </div>
+            <a href="https://www.google.com/maps?q=%EB%B6%84%EA%B9%8C+%ED%95%98%EC%9D%B4%EA%B9%8C(%EC%98%A4%EC%A7%95%EC%96%B4%EC%96%B4%EB%AC%B5%EC%8C%80%EA%B5%AD%EC%88%98)+156+Nguy%E1%BB%85n+Th%E1%BB%8B+Minh+Khai,+Nha+Trang,+Kh%C3%A1nh+H%C3%B2a+650000+%EB%B2%A0%ED%8A%B8%EB%82%A8" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <h2 class="section-title">☕ 카페 (Cafes)</h2>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">1. CCCP 커피 (CCCP Coffee)</h3>
+                <div class="rating">⭐ 4.6</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">코코넛 커피, 박시우(베트남식 연유커피), 망고 스무디</span>
+            </div>
+            <div class="desc">
+                한국인 여행객들의 나트랑 필수 코스로 불릴 만큼 압도적인 인기를 자랑하는 곳입니다. 빵빵한 에어컨과 넓고 푹신한 소파 좌석을 갖추고 있어 한낮의 더위를 피하기 가장 완벽한 카페입니다.
+            </div>
+            <a href="https://maps.app.goo.gl/yT2caae8rjPSiLau5?g_st=ic" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">2. Than - The Greenery</h3>
+                <div class="rating">⭐ 4.7</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">까눌레, 머핀, 과일 차, 스페셜티 커피</span>
+            </div>
+            <div class="desc">
+                한국형 카페, 외부에서는 상상할 수 없는 반전 매력을 지닌 감각적인 카페입니다. 1층은 미니멀한 화이트 톤으로 깔끔하게 꾸며져 있으며, 2층은 그랜드 캐년을 모티브로 한 압도적이고 독특한 인테리어를 자랑합니다. 시원한 에어컨 바람 아래 쾌적하게 맛있는 디저트를 즐기며 인생 사진을 남기기 좋아 나트랑 현지에서도 무척 인기 있는 곳입니다.
+            </div>
+            <a href="https://maps.app.goo.gl/owuaUXQmLSWNBk2f8?g_st=ic" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">3. 올라 카페(Ola Cafe)</h3>
+                <div class="rating">⭐ 4.8</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">소금 커피, 코코넛 커피</span>
+            </div>
+            <div class="desc">
+                핑크빛 동굴 컨셉 인테리어, 다양한 포토존, 에어컨 있음
+            </div>
+            <a href="https://www.google.com/maps/place/%EC%98%AC%EB%9D%BC+%EC%B9%B4%ED%8E%98/" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">4. 정글커피</h3>
+                <div class="rating">⭐ 4.7</div>
+            </div>
+            <div class="info-row">
+                <span class="label">추천 메뉴:</span>
+                <span class="menu">코코넛 커피, 망고 스무디</span>
+            </div>
+            <div class="desc">
+                도심 속 식물원(정글) 컨셉의 인테리어, 사진 찍기 좋은 포토존, 실내 에어컨 완비
+            </div>
+            <a href="https://www.google.com/maps/place/%EC%A0%95%EA%B8%80%EC%BB%A4%ED%94%BC(jungle+coffee)/" class="link-btn" target="_blank">🗺️ 구글맵 보기</a>
+        </div>
     </div>
-
-    <div class="item-card">
-        <h3 class="item-title">2. JJ 씨푸드 (JJ Seafood) - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.8</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 치즈 가리비 구이, 블랙타이거 새우구이, 맛조개 볶음</div>
-        <div class="info-row"><span class="label">특징:</span> 여행자 거리 중심에 있어 접근성이 좋고, 대형 수조에서 신선한 해산물을 직접 골라 정찰제로 계산하는 시스템. 한국어 메뉴판이 완비되어 주문이 편리함.</div>
-        <a href="https://maps.app.goo.gl/AvWP33Mmaa8sPtRn7?g_st=ic" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">3. 안토이 (An Thoi) - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.8</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 분짜 스프링롤 세트, 소곱창 쌀국수, 파인애플 볶음밥</div>
-        <div class="info-row"><span class="label">특징:</span> 노란색 외관의 세련된 로컬 감성 인테리어와 강력한 에어컨 시설을 자랑함. 길거리 식당의 위생 걱정 없이 청결한 환경에서 수준 높은 베트남 요리를 맛볼 수 있음.</div>
-        <a href="https://maps.app.goo.gl/24vFWzjTghsod4zq7?g_st=ic" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">4. 빈산 (Nhà hàng Vịnh Xanh) - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.6</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 랍스터 치즈/갈릭 구이, 맛조개 볶음, 파인애플 볶음밥, 가리비 파기름 구이</div>
-        <div class="info-row"><span class="label">특징:</span> 나트랑 시내에서 한국인 여행객들에게 가장 인지도가 높은 대표적인 해산물 전문점 중 하나. 야외 좌석 및 에어컨 룸 완비. 대형 수조에서 싱싱한 해산물을 직접 고르며 정찰제로 운영.</div>
-        <a href="https://maps.google.com/?q=Nhà+hàng+Vịnh+Xanh+Nha+Trang" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">5. 반미 꽝빈 (Bánh Mì Quang Vinh) - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.5</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 믹스 반미(Thập Cẩm), 숯불고기 반미, 계란 반미</div>
-        <div class="info-row"><span class="label">특징:</span> 나트랑 3대 반미 맛집으로 꼽히는 로컬 찐맛집. 바삭한 바게트와 숯불 향 고기, 신선한 채소가 조화로움. (포장 추천)</div>
-        <a href="https://maps.google.com/?q=Bánh+Mì+Quang+Vinh+Nha+Trang" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">6. 랑짜이 해산물 식당 - 깜란</h3>
-        <span class="rating">⭐ 구글 평점: 4.9</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 콤보 메뉴 (랍스터, 타이거 새우, 모닝글로리 볶음, 해산물 볶음밥 등)</div>
-        <div class="info-row"><span class="label">특징:</span> 깜란 공항 근처 위치. 깜란 지역 내 주요 리조트 픽업/샌딩 서비스 제공. 푸짐한 해산물을 합리적으로 즐길 수 있는 세트 구성 인기. 에어컨 VIP룸 있음.</div>
-        <a href="https://maps.app.goo.gl/LBgM6rmS3s9aT8un8?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">7. 하랑식당 - 깜란, 한식당</h3>
-        <span class="rating">⭐ 구글 평점: 4.7</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 삼겹살 등 구이류, 안주류, 분식류</div>
-        <div class="info-row"><span class="label">특징:</span> 깜란 지역 위치 퀄리티 높은 한식당. 지역 내 무료 픽업/배달 제공. 한국인 주방장 조리, 밑반찬 무제한 리필, 직원이 고기를 직접 구워줌. (카카오톡: harang0966)</div>
-        <a href="https://maps.app.goo.gl/W7i1tWi3zhEnLBQT7?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">8. 씀모이 가든 - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.8</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 넴느엉, 반쎄오, 분짜, 맛조개 모닝글로리 볶음, 바베큐 폭립</div>
-        <div class="info-row"><span class="label">특징:</span> 전 좌석 에어컨 완비, 깔끔하고 쾌적한 베트남 가정식 맛집. 한국어 메뉴판 제공. 위생적이고 고급스러운 분위기에서 로컬 음식 즐기기 좋음.</div>
-        <a href="https://maps.app.goo.gl/EDtZiwbjnNoK8iYu6?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">9. 루엉쏭깡 - 나트랑 시내</h3>
-        <span class="rating">⭐ 구글 평점: 4.9</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 랍스터 요리, 맛조개 모닝글로리 볶음, 버터갈릭 새우구이, 가리비 치즈구이, 해산물 볶음밥</div>
-        <div class="info-row"><span class="label">특징:</span> 가성비 뛰어난 해산물 전문점. 수조에서 해산물을 직접 고르고 조리 방식 선택 가능. 한국어 가능 직원 상주, 픽업/샌딩 서비스, 카드결제 수수료 무료. (에어컨 없음)</div>
-        <a href="https://maps.app.goo.gl/NQUJfuuu5vzkF7t16?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">10. K.HOUSE Restaurant - 나트랑 시내, 한식당</h3>
-        <span class="rating">⭐ 구글 평점: 4.9</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 랍스터 치즈구이, 소고기 스테이크, 칠리크랩, 떡볶이, 김치볶음밥</div>
-        <div class="info-row"><span class="label">특징:</span> 탁 트인 오션뷰의 퓨전 한식/해산물 레스토랑. 한국인 사장님 운영. 가족 여행객에게 인기. 새벽 2시까지 넉넉하게 운영하여 야식/술자리에 적합.</div>
-        <a href="https://maps.app.goo.gl/K45KyS5zz8V9r7yn9?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">11. 나트랑 돌산 DA NUI - 나트랑 시내, 한식당</h3>
-        <span class="rating">⭐ 구글 평점: [평점 기입]</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 삼겹살, 소고기 구이, 김치찌개, 냉면 등 한식 메뉴</div>
-        <div class="info-row"><span class="label">특징:</span> 한국식 숯불구이(BBQ) 전문점. 푸짐한 밑반찬과 직원이 고기를 구워주는 서비스. 가족 단위 및 부모님 동반 여행객에게 편안한 식사 제공.</div>
-        <a href="https://maps.app.goo.gl/SKtQeoUCmh5RSBKs9?g_st=akt" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">12. 분까 하이까 (Bún Cá Hai Cá)</h3>
-        <span class="rating">⭐ 구글 평점: 4.4</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 오징어 어묵 쌀국수(분짜까), 해파리 어묵 쌀국수(분까스어)</div>
-        <div class="info-row"><span class="label">특징:</span> 유명한 로컬 쌀국수 맛집. 맑고 시원한 국물에 수제 오징어 어묵과 해파리가 특징. 아침 일찍부터 영업하여 조식이나 해장으로 인기. (에어컨 없는 야외 개방형)</div>
-        <a href="https://www.google.com/maps?q=%EB%B6%84%EA%B9%8C+%ED%95%98%EC%9D%B4%EA%B9%8C(%EC%98%A4%EC%A7%95%EC%96%B4%EC%96%B4%EB%AC%B5%EC%8C%80%EA%B5%AD%EC%88%98)+156+Nguy%E1%BB%85n+Th%E1%BB%8B+Minh+Khai,+Nha+Trang,+Kh%C3%A1nh+H%C3%B2a+650000+%EB%B2%A0%ED%8A%B8%EB%82%A8" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <hr style="border: 0; height: 1px; background: #ddd; margin: 40px 0;">
-
-    <h2>☕ 추천 카페</h2>
-
-    <div class="item-card">
-        <h3 class="item-title">1. CCCP 커피 (CCCP Coffee)</h3>
-        <span class="rating">⭐ 구글 평점: 4.6</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 코코넛 커피, 박시우(베트남식 연유커피), 망고 스무디</div>
-        <div class="info-row"><span class="label">특징:</span> 한국인 여행객 필수 코스로 불릴 만큼 인기. 빵빵한 에어컨과 넓고 푹신한 소파 좌석으로 한낮의 더위를 피하기 완벽함.</div>
-        <a href="https://maps.app.goo.gl/yT2caae8rjPSiLau5?g_st=ic" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-    <div class="item-card">
-        <h3 class="item-title">2. Than - The Greenery</h3>
-        <span class="rating">⭐ 구글 평점: 4.7</span>
-        <div class="info-row"><span class="label">추천 메뉴:</span> 까눌레, 머핀, 과일 차, 스페셜티 커피</div>
-        <div class="info-row"><span class="label">특징:</span> 한국형 감성 카페. 1층은 미니멀한 화이트 톤, 2층은 그랜드 캐년을 모티브로 한 독특한 인테리어. 인생 사진을 남기며 맛있는 디저트를 즐기기 좋음.</div>
-        <a href="https://maps.app.goo.gl/owuaUXQmLSWNBk2f8?g_st=ic" class="link-btn" target="_blank">📍 구글맵 보기</a>
-    </div>
-
-</div>
 </body>
 </html>

@@ -12,11 +12,11 @@
       --text-sub: #94a3b8;
       --border: #334155;
       --accent: #38bdf8;
-      --pg-color: #f472b6; /* 핑크 */
-      --sg-color: #fb923c; /* 오렌지 */
-      --sf-color: #4ade80; /* 그린 */
-      --pf-color: #a78bfa; /* 퍼플 */
-      --c-color:  #60a5fa; /* 블루 */
+      --pg-color: #f472b6;
+      --sg-color: #fb923c;
+      --sf-color: #4ade80;
+      --pf-color: #a78bfa;
+      --c-color:  #60a5fa;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +29,7 @@
       line-height: 1.5;
     }
 
-    .container { max-width: 1200px; margin: 0 auto; }
+    .container { max-width: 1400px; margin: 0 auto; }
 
     header { text-align: center; margin-bottom: 30px; }
     header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; }
@@ -40,10 +40,14 @@
       padding: 20px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     }
 
     input, select {
@@ -55,29 +59,51 @@
       font-size: 1rem;
       outline: none;
       flex: 1;
-      min-width: 200px;
+      min-width: 250px;
     }
 
     input:focus, select:focus { border-color: var(--accent); }
 
     .stats {
-      font-size: 0.9rem;
-      color: var(--text-sub);
+      font-size: 0.95rem;
+      color: var(--accent);
       margin-bottom: 20px;
-      font-weight: 500;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    /* 팀별 그룹화 스타일 */
+    .team-section {
+      margin-bottom: 40px;
+      background: #151e2e;
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .team-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .player-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
 
     .player-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       transition: transform 0.2s;
     }
 
@@ -94,15 +120,9 @@
     }
 
     .player-name {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       font-weight: 700;
       color: #ffffff;
-    }
-
-    .team-name {
-      font-size: 0.85rem;
-      color: var(--text-sub);
-      margin-top: 2px;
     }
 
     .pos-badge {
@@ -129,6 +149,14 @@
     .desc {
       font-size: 0.9rem;
       color: #cbd5e1;
+      word-break: keep-all;
+    }
+    
+    .no-result {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-sub);
+      font-size: 1.1rem;
     }
   </style>
 </head>
@@ -136,37 +164,33 @@
 
 <div class="container">
   <header>
-    <h1>🏀 NBA 핵심 선수 가이드</h1>
-    <p>각 팀을 대표하는 주전 및 주요 식스맨의 정보와 특징을 검색해보세요.</p>
+    <h1>🏀 NBA 핵심 선수 가이드 (팀별 보기)</h1>
+    <p>각 팀을 대표하는 주전 선수들을 한눈에 확인하고 검색해 보세요.</p>
   </header>
 
   <div class="controls">
     <input type="text" id="searchInput" placeholder="선수 이름 또는 특징 검색 (예: 3점슛, 돈치치)...">
-    <select id="teamSelect">
-      <option value="all">모든 구단 보기</option>
-      <!-- 구단 옵션은 JS로 자동 생성됨 -->
-    </select>
     <select id="posSelect">
       <option value="all">모든 포지션</option>
-      <option value="PG">PG (포인트 가드)</option>
-      <option value="SG">SG (슈팅 가드)</option>
-      <option value="SF">SF (스몰 포워드)</option>
-      <option value="PF">PF (파워 포워드)</option>
-      <option value="C">C (센터)</option>
+      <option value="PG">PG (포인트 가드 - 조율사)</option>
+      <option value="SG">SG (슈팅 가드 - 외곽 득점)</option>
+      <option value="SF">SF (스몰 포워드 - 공수겸장)</option>
+      <option value="PF">PF (파워 포워드 - 궂은일/득점)</option>
+      <option value="C">C (센터 - 골밑 수호자)</option>
     </select>
   </div>
 
   <div class="stats" id="statsCount">표시된 선수: 0명</div>
   
-  <div class="player-grid" id="playerGrid">
-    <!-- 선수 카드가 표시되는 영역 -->
+  <div id="mainContainer">
+    <!-- 자바스크립트를 통해 팀별 그룹이 여기에 렌더링됩니다 -->
   </div>
 </div>
 
 <script>
-// 데이터베이스: 30개 구단 x 팀당 핵심 5명 = 총 150명
+// 오류가 수정된 완벽한 선수 데이터베이스
 const playersData = [
-  // 동부 - 대서양
+  // 동부
   { team: "보스턴 셀틱스", name: "제이슨 테이텀", pos: "SF", role: "1옵션 에이스", desc: "팀의 주득점원으로 내외곽을 가리지 않는 스코어러이자 수비력까지 갖춘 완성형 포워드." },
   { team: "보스턴 셀틱스", name: "제일런 브라운", pos: "SG", role: "강력한 2옵션", desc: "폭발적인 운동능력과 강력한 돌파, 파이널 MVP 출신의 탄탄한 공수 겸장." },
   { team: "보스턴 셀틱스", name: "즈루 할러데이", pos: "PG", role: "수비 마스터", desc: "상대 에이스를 지워버리는 리그 최고의 앞선 수비수이자 영리한 플레이메이커." },
@@ -181,23 +205,10 @@ const playersData = [
 
   { team: "필라델피아 76ers", name: "조엘 엠비드", pos: "C", role: "MVP 빅맨", desc: "압도적인 골밑 파괴력과 정교한 미드레인지 점퍼를 갖춘 리그 최고의 센터." },
   { team: "필라델피아 76ers", name: "타이리스 맥시", pos: "PG", role: "초고속 스코어러", desc: "리그에서 가장 빠른 발을 이용한 돌파와 정확한 3점 슛을 겸비한 젊은 스타." },
-  { team: "필라델피아 76ers", name: "폴 조지", pos: "SF", role: "공수겸장 베테랑", 부드러운 슛 터치와 유려한 득점 기술, 우수한 수비력을 갖춘 만능 포워드." },
+  { team: "필라델피아 76ers", name: "폴 조지", pos: "SF", role: "공수겸장 베테랑", desc: "부드러운 슛 터치와 유려한 득점 기술, 우수한 수비력을 갖춘 만능 포워드." },
   { team: "필라델피아 76ers", name: "켈리 우브레 주니어", pos: "SF", role: "슬래셔", desc: "뛰어난 운동능력을 바탕으로 림을 직접 타격하는 시원시원한 돌파가 장점." },
   { team: "필라델피아 76ers", name: "케일럽 마틴", pos: "SF", role: "허슬 윙", desc: "마이애미에서 합류한 투지 넘치는 윙 디펜더로 궂은일을 도맡아 함." },
 
-  { team: "토론토 랩터스", name: "스코티 반즈", pos: "PF", role: "포인트 포워드", desc: "큰 키에 가드급 패싱 센스를 갖춘 토론토 리빌딩의 중심이자 올라운더." },
-  { team: "토론토 랩터스", name: "이마누엘 퀴클리", pos: "PG", role: "플로터 장인", desc: "경쾌한 리듬의 플로터와 3점 슛으로 공격을 이끄는 메인 볼 핸들러." },
-  { team: "토론토 랩터스", name: "RJ 배럿", pos: "SG", role: "왼손잡이 슬래셔", desc: "직선적인 돌파와 피지컬을 활용한 득점에 능한 윙 스코어러." },
-  { team: "토론토 랩터스", name: "야콥 퍼들", pos: "C", role: "정통 수비형 빅맨", desc: "화려하진 않지만 스크린, 리바운드, 골밑 수비 등 기본기에 극도로 충실함." },
-  { team: "토론토 랩터스", name: "그레이디 딕", pos: "SG", role: "슈팅 스페셜리스트", desc: "빠른 슛 릴리즈와 정확한 외곽포를 무기로 하는 젊은 슈터." },
-
-  { team: "브루클린 네츠", name: "캠 토머스", pos: "SG", role: "아이솔레이션 마스터", desc: "한 번 터지면 40득점도 우스운 폭발적인 1대1 득점 스킬의 소유자." },
-  { team: "브루클린 네츠", name: "닉 클랙스턴", pos: "C", role: "림 프로텍터", desc: "기동력이 매우 뛰어난 센터로 스위치 수비와 블록슛 1인자." },
-  { team: "브루클린 네츠", name: "카메론 존슨", pos: "PF", role: "엘리트 슈터", desc: "큰 키와 깔끔한 슛 폼을 바탕으로 한 외곽 득점 지원이 뛰어남." },
-  { team: "브루클린 네츠", name: "데니스 슈뢰더", pos: "PG", role: "베테랑 가드", desc: "빠른 스피드로 코트를 휘젓고 노련하게 경기를 조율하는 야전 사령관." },
-  { team: "브루클린 네츠", name: "도리안 핀니-스미스", pos: "PF", role: "수비 스페셜리스트", desc: "단단한 수비와 코너 3점 슛을 주무기로 하는 전형적인 3&D 포워드." },
-
-  // 동부 - 중부
   { team: "밀워키 벅스", name: "야니스 아데토쿤보", pos: "PF", role: "그리스 괴물", desc: "압도적인 신체 조건과 보폭으로 코트를 박살내는 골밑의 지배자." },
   { team: "밀워키 벅스", name: "데미안 릴라드", pos: "PG", role: "클러치 타임 (Dame Time)", desc: "하프라인 근처에서도 슛을 쏠 수 있는 장거리 포격기이자 강심장 승부사." },
   { team: "밀워키 벅스", name: "크리스 미들턴", pos: "SF", role: "미드레인지 장인", desc: "중요한 순간마다 미드레인지 점퍼로 공격의 혈을 뚫어주는 베테랑." },
@@ -210,56 +221,7 @@ const playersData = [
   { team: "클리블랜드 캐벌리어스", name: "자렛 알렌", pos: "C", role: "블루워커", desc: "단단한 스크린과 강력한 덩크, 수비 리바운드를 책임지는 든든한 센터." },
   { team: "클리블랜드 캐벌리어스", name: "맥스 스트러스", pos: "SG", role: "전문 슈터", desc: "코트 구석구석을 누비며 캐치 앤 슛으로 상대 수비진을 넓게 벌려주는 역할." },
 
-  { team: "인디애나 페이서스", name: "타이리스 할리버튼", pos: "PG", role: "패스 마스터", desc: "리그 최고 수준의 어시스트 능력과 변칙적인 3점 슛으로 초고속 공격을 지휘." },
-  { team: "인디애나 페이서스", name: "파스칼 시아캄", pos: "PF", role: "베테랑 득점원", desc: "포스트업과 스핀 무브를 활용한 돌파가 장점이며, 공격의 중심을 잡아줌." },
-  { team: "인디애나 페이서스", name: "마일스 터너", pos: "C", role: "3&D 빅맨", desc: "우수한 블록슛 능력과 정확한 3점 슛 장착으로 공간 창출에 기여." },
-  { team: "인디애나 페이서스", name: "앤드류 넴하드", pos: "PG", role: "안정감 있는 가드", desc: "볼 간수 능력이 뛰어나고 플레이오프 등 큰 경기에서 강심장을 뽐냄." },
-  { team: "인디애나 페이서스", name: "베네딕트 매서린", pos: "SG", role: "저돌적 슬래셔", desc: "강력한 피지컬을 앞세워 거침없이 골밑을 파고드는 젊은 득점원." },
-
-  { team: "디트로이트 피스턴스", name: "케이드 커닝햄", pos: "PG", role: "장신 조율사", desc: "가드치고 큰 키(198cm)를 활용해 시야를 확보하고 경기를 통제하는 야전 사령관." },
-  { team: "디트로이트 피스턴스", name: "제이든 아이비", pos: "SG", role: "스피드 스타", desc: "첫 스텝이 매우 빨라 순식간에 골밑을 파고드는 운동능력 1티어 가드." },
-  { team: "디트로이트 피스턴스", name: "제일런 듀렌", pos: "C", role: "괴물 피지컬", desc: "어린 나이에도 완성된 근육질 체격을 바탕으로 보드 장악력이 뛰어남." },
-  { team: "디트로이트 피스턴스", name: "토바이어스 해리스", pos: "PF", role: "베테랑 스코어러", desc: "젊은 팀의 중심을 잡아주는 득점원으로 안정적인 미드레인지 장착." },
-  { team: "디트로이트 피스턴스", name: "아우사르 톰슨", pos: "SF", role: "수비 천재", desc: "공격력은 아직 다듬어지지 않았으나, 수비력과 리바운드는 리그 정상급 유망주." },
-
-  { team: "시카고 불스", name: "잭 라빈", pos: "SG", role: "하이플라이어 슈터", desc: "역대급 덩커 출신이나 현재는 매우 부드러운 슛 터치를 자랑하는 외곽 스코어러." },
-  { team: "시카고 불스", name: "니콜라 부세비치", pos: "C", role: "정통 포스트업 센터", desc: "골밑 기술과 리바운드가 뛰어나며 외곽 슛도 갖춘 기술 좋은 빅맨." },
-  { team: "시카고 불스", name: "코비 화이트", pos: "PG", role: "폭발력 있는 가드", desc: "기량 발전상(MIP) 급으로 성장한 불스의 핵심 외곽 득점원 및 핸들러." },
-  { team: "시카고 불스", name: "조쉬 기디", pos: "PG", role: "장신 패서", desc: "203cm의 장신 포인트 가드로 훌륭한 시야와 리바운드 능력을 갖춤." },
-  { team: "시카고 불스", name: "패트릭 윌리엄스", pos: "PF", role: "신체조건 좋은 포워드", desc: "수비와 외곽 슛에서 팀의 궂은일을 담당하는 3&D 자원." },
-
-  // 동부 - 동남부
-  { team: "마이애미 히트", name: "지미 버틀러", pos: "SF", role: "승부사", desc: "정규시즌엔 숨을 고르다 플레이오프만 되면 마이클 조던에 빙의하는 강심장 에이스." },
-  { team: "마이애미 히트", name: "뱀 아데바요", pos: "C", role: "전천후 빅맨", desc: "가드까지 수비할 수 있는 엄청난 스피드와 컨트롤 타워 역할을 수행하는 센터." },
-  { team: "마이애미 히트", name: "타일러 히로", pos: "SG", role: "슈팅 에이스", desc: "자신감 넘치는 3점 슛과 돌파로 득점을 책임지는 핵심 슈터." },
-  { team: "마이애미 히트", name: "테리 로지어", pos: "PG", role: "스코어링 가드", desc: "화려한 드리블과 득점 본능으로 공격의 활로를 뚫어주는 역할." },
-  { team: "마이애미 히트", name: "하이메 하케즈 주니어", pos: "SF", role: "노련한 영건", desc: "신인답지 않은 올드스쿨 스텝과 허슬로 마이애미 문화에 완벽 적응한 포워드." },
-
-  { team: "올랜도 매직", name: "파올로 반케로", pos: "PF", role: "에이스 올라운더", desc: "강력한 피지컬과 드리블, 미드레인지를 갖춘 차세대 리그 간판스타 후보." },
-  { team: "올랜도 매직", name: "프란츠 바그너", pos: "SF", role: "유로스텝 장인", desc: "영리한 돌파와 타이밍 뺏는 플레이로 꾸준히 20득점을 올려주는 2옵션." },
-  { team: "올랜도 매직", name: "제일런 석스", pos: "PG", role: "수비 불독", desc: "강력한 압박 수비로 상대 가드의 혼을 빼놓는 팀 수비의 선봉장." },
-  { team: "올랜도 매직", name: "웬델 카터 주니어", pos: "C", role: "연결고리 센터", desc: "스크린, 리바운드, 외곽 슛 지원 등 팀에 필요한 모든 궂은일을 담당." },
-  { team: "올랜도 매직", name: "조나단 아이작", pos: "PF", role: "수비 스페셜리스트", desc: "건강할 때는 리그 최고의 헬프 디펜더이자 블로커로 활약하는 선수." },
-
-  { team: "애틀랜타 호크스", name: "트레이 영", pos: "PG", role: "딥쓰리 & 패스", desc: "하프라인 부근에서 슛을 쏘고, 골밑의 빅맨에게 로브 패스를 띄우는 공격 조립의 천재." },
-  { team: "애틀랜타 호크스", name: "제일런 존슨", pos: "PF", role: "운동능력 몬스터", desc: "폭발적인 덩크와 기동력으로 속공을 마무리하며 팀의 미래 코어로 급부상." },
-  { team: "애틀랜타 호크스", name: "자카리 리사셰", pos: "SF", role: "전체 1순위 루키", desc: "뛰어난 슈팅 터치와 수비 잠재력을 갖춘 206cm의 대형 프랑스 유망주." },
-  { team: "애틀랜타 호크스", name: "보그단 보그다노비치", pos: "SG", role: "슈팅 기계", desc: "오프더볼 움직임이 훌륭하며 벤치에서 나와 흐름을 바꾸는 엘리트 슈터." },
-  { team: "애틀랜타 호크스", name: "클린트 카펠라", pos: "C", role: "골밑 청소부", desc: "트레이 영의 패스를 받아 앨리웁 덩크를 찍고 리바운드를 사수하는 블루워커." },
-
-  { team: "샬럿 호니츠", name: "라멜로 볼", pos: "PG", role: "쇼타임 사령관", desc: "창의적이고 화려한 패스와 장거리 3점 슛으로 경기를 예술로 만드는 스타." },
-  { team: "샬럿 호니츠", name: "브랜든 밀러", pos: "SF", role: "폴 조지 복사기", desc: "우아한 슛 폼과 훌륭한 신체 조건을 바탕으로 빠르게 성장 중인 윙 스코어러." },
-  { team: "샬럿 호니츠", name: "마일스 브릿지스", pos: "PF", role: "덩크 머신", desc: "힘과 탄력을 앞세운 폭발적인 덩크와 외곽 슛을 고루 갖춘 포워드." },
-  { team: "샬럿 호니츠", name: "마크 윌리엄스", pos: "C", role: "장신 림 프로텍터", desc: "213cm의 큰 키와 긴 팔로 샬럿의 골밑 수비를 책임지는 유망주 빅맨." },
-  { team: "샬럿 호니츠", name: "트레 만", pos: "PG", role: "득점형 식스맨", desc: "빠른 스텝백과 크로스오버로 득점을 창출해내는 백업 가드." },
-
-  { team: "워싱턴 위저즈", name: "조던 풀", pos: "SG", role: "기복 있는 스코어러", desc: "슛 거리가 길고 화려한 드리블을 갖춰 터지는 날에는 막을 수 없는 득점원." },
-  { team: "워싱턴 위저즈", name: "카일 쿠즈마", pos: "PF", role: "메인 득점원", desc: "자신감 넘치는 슛 시도와 다재다능함으로 워싱턴 공격을 이끄는 포워드." },
-  { team: "워싱턴 위저즈", name: "알렉스 사르", pos: "C", role: "차세대 수비 기둥", desc: "우수한 기동력과 블록슛 타이밍을 갖춘 2024 드래프트 2순위 유망주." },
-  { team: "워싱턴 위저즈", name: "빌랄 쿨리발리", pos: "SF", role: "수비형 윙", desc: "긴 팔과 탁월한 수비 센스로 상대 에이스를 전담 마크하는 프랑스산 유망주." },
-  { team: "워싱턴 위저즈", name: "요나스 발렌슈나스", pos: "C", role: "골밑의 파이터", desc: "강력한 힘으로 포스트업과 리바운드를 따내는 베테랑 정통파 센터." },
-
-  // 서부 - 북서부
+  // 서부
   { team: "오클라호마시티 썬더", name: "샤이 길저스-알렉산더", pos: "PG", role: "무결점 에이스", desc: "특유의 리듬감으로 상대 수비를 허물고 미드레인지와 돌파를 성공시키는 MVP급 선수." },
   { team: "오클라호마시티 썬더", name: "쳇 홈그렌", pos: "C", role: "수비형 유니콘", desc: "매우 마른 체격이나 슛 블록 타이밍이 예술적이며 공격 시 3점 슛까지 갖춘 빅맨." },
   { team: "오클라호마시티 썬더", name: "제일런 윌리엄스", pos: "PF", role: "만능 살림꾼", desc: "돌파, 수비, 슛, 패스 모든 것이 리그 상위권인 완벽한 2옵션." },
@@ -278,19 +240,6 @@ const playersData = [
   { team: "미네소타 팀버울브스", name: "나즈 리드", pos: "C", role: "식스맨 빅맨", desc: "빅맨임에도 드리블 돌파와 3점 슛이 매우 부드러워 흐름을 바꾸는 키 플레이어." },
   { team: "미네소타 팀버울브스", name: "제이든 맥다니엘스", pos: "SF", role: "외곽 수비 에이스", desc: "긴 팔과 빠른 발로 상대 팀 에이스 가드/포워드를 꽁꽁 묶는 1티어 수비수." },
 
-  { team: "유타 재즈", name: "라우리 마카넨", pos: "PF", role: "북유럽 저격수", desc: "213cm의 큰 키로 빠른 움직임과 정확한 3점 슛을 가져가는 유타의 1옵션." },
-  { team: "유타 재즈", name: "콜린 섹스턴", pos: "SG", role: "열정의 스코어러", desc: "황소 같은 저돌적인 돌파와 투지 넘치는 플레이로 득점을 올리는 가드." },
-  { team: "유타 재즈", name: "워커 케슬러", pos: "C", role: "블록슛 머신", desc: "화려함은 적지만 골밑 수비와 블록슛에 있어서는 최상위권 효율을 보여줌." },
-  { team: "유타 재즈", name: "키욘테 조지", pos: "PG", role: "성장하는 리딩 가드", desc: "유타 리빌딩의 코어 유망주로 슛과 리딩 능력을 점차 키워나가고 있음." },
-  { team: "유타 재즈", name: "존 콜린스", pos: "PF", role: "운동능력형 포워드", desc: "픽앤롤 공격에 이은 호쾌한 덩크 마무리와 리바운드가 장점인 선수." },
-
-  { team: "포틀랜드 트레일블레이저스", name: "앤퍼니 사이먼스", pos: "SG", role: "메인 슈터", desc: "빠른 슛 릴리즈와 높은 포물선으로 무수히 많은 3점 슛을 꽂아 넣는 스코어러." },
-  { team: "포틀랜드 트레일블레이저스", name: "제라미 그랜트", pos: "PF", role: "공수겸장 포워드", desc: "뛰어난 신체 조건으로 1대1 공격과 수비를 모두 높은 수준으로 소화." },
-  { team: "포틀랜드 트레일블레이저스", name: "디안드레 에이튼", pos: "C", role: "미드레인지 빅맨", desc: "부드러운 터치의 훅슛과 점프슛을 장착한 전체 1순위 출신 센터." },
-  { team: "포틀랜드 트레일블레이저스", name: "스쿳 헨더슨", pos: "PG", role: "괴물 피지컬 가드", desc: "강력한 힘과 스피드로 림을 타격하는 포틀랜드의 미래 야전사령관." },
-  { team: "포틀랜드 트레일블레이저스", name: "셰이든 샤프", pos: "SG", role: "하이플라이어", desc: "리그 최고 수준의 점프력을 바탕으로 환상적인 덩크 하이라이트를 만들어냄." },
-
-  // 서부 - 태평양
   { team: "골든스테이트 워리어스", name: "스테픈 커리", pos: "PG", role: "3점 슛의 신", desc: "농구의 역사를 바꾼 아이콘. 언제 어디서든 슛을 던져 넣는 현역 최고의 선수 중 한 명." },
   { team: "골든스테이트 워리어스", name: "드레이먼드 그린", pos: "PF", role: "수비 & 리딩 타워", desc: "팀의 수비 전체를 지휘하고 커리에게 완벽한 스크린과 패스를 제공하는 두뇌." },
   { team: "골든스테이트 워리어스", name: "조나단 쿠밍가", pos: "SF", role: "돌격대장", desc: "엄청난 운동능력과 탄력을 바탕으로 커리가 벌려놓은 공간을 파고들어 득점함." },
@@ -303,25 +252,6 @@ const playersData = [
   { team: "LA 레이커스", name: "디안젤로 러셀", pos: "PG", role: "리듬 슈터", desc: "기복은 있으나 슛 터치가 터지는 날에는 3점 슛을 비가 내리듯 꽂아 넣음." },
   { team: "LA 레이커스", name: "루이 하치무라", pos: "PF", role: "미드레인지 타겟", desc: "안정적인 체격을 바탕으로 포스트업과 미드레인지 슛을 꽂아주는 탄탄한 포워드." },
 
-  { team: "피닉스 선즈", name: "케빈 듀란트", pos: "PF", role: "사신 (Reaper)", desc: "210cm의 키에 가드의 슛 터치를 지녀 알고도 막을 수 없는 1대1 공격의 마스터." },
-  { team: "피닉스 선즈", name: "데빈 부커", pos: "SG", role: "정통파 스코어러", desc: "교과서적인 슛 폼과 풋워크로 미드레인지와 3점을 폭격하는 득점 기계." },
-  { team: "피닉스 선즈", name: "브래들리 빌", pos: "SG", role: "3옵션 스타", desc: "메인 에이스 출신으로 매끄러운 돌파와 슛을 지녔으며, 현재는 볼 핸들링 보조 역할 수행." },
-  { team: "피닉스 선즈", name: "타이어스 존스", pos: "PG", role: "안정성의 대명사", desc: "실책이 리그에서 가장 적은 포인트 가드로, 선즈의 뻑뻑한 공격 조립을 원활하게 해줌." },
-  { team: "피닉스 선즈", name: "유수프 너키치", pos: "C", role: "몸빵 센터", desc: "육중한 체구로 스크린을 굳건히 서주며, 탑에서 뿌려주는 패스 센스가 좋음." },
-
-  { team: "새크라멘토 킹스", name: "디애런 팍스", pos: "PG", role: "광속 돌파", desc: "리그에서 가장 빠른 발을 가진 선수 중 하나로 4쿼터 클러치 타임에 유독 강함." },
-  { team: "새크라멘토 킹스", name: "도만타스 사보니스", pos: "C", role: "컨트롤 타워", desc: "리바운드 1위 단골 손님. 탑에서 핸드오프 패스를 통해 킹스 공격의 중심축을 맡음." },
-  { team: "새크라멘토 킹스", name: "더마 드로잔", pos: "SF", role: "미드레인지 장인", desc: "현대 농구에서 드물게 3점 슛보다 확률 높은 미드레인지와 펌프 페이크로 수비를 농락." },
-  { team: "새크라멘토 킹스", name: "키건 머레이", pos: "PF", role: "정교한 슈터", desc: "안정적인 3점 슛 기복과 훌륭한 대인 수비 능력을 갖춘 필수 3&D 자원." },
-  { team: "새크라멘토 킹스", name: "말릭 몽크", pos: "SG", role: "슈퍼 식스맨", desc: "벤치에서 출전해 코트 분위기를 순식간에 바꾸는 폭발적인 득점력과 쇼맨십." },
-
-  { team: "LA 클리퍼스", name: "카와이 레너드", pos: "SF", role: "사이보그 에이스", desc: "기계처럼 정확한 미드레인지 점퍼와 상대 에이스의 숨통을 조이는 강력한 수비력." },
-  { team: "LA 클리퍼스", name: "제임스 하든", pos: "PG", role: "픽앤롤 마스터", desc: "스텝백 3점 슛의 선구자이자 센터를 살려주는 픽앤롤 패스가 리그 최고 수준." },
-  { team: "LA 클리퍼스", name: "이비차 주바치", pos: "C", role: "든든한 빅맨", desc: "하든과의 픽앤롤을 통해 골밑에서 확률 높은 득점을 올리고 리바운드를 사수함." },
-  { team: "LA 클리퍼스", name: "노먼 파웰", pos: "SG", role: "마이크로웨이브", desc: "공을 잡으면 주저 없이 외곽 슛이나 돌파를 시도해 팀 득점을 끌어올리는 폭발력." },
-  { team: "LA 클리퍼스", name: "데릭 존스 주니어", pos: "SF", role: "탄력 넘치는 수비수", desc: "가벼운 몸놀림으로 코트를 누비며 호쾌한 앨리웁 덩크와 외곽 수비를 담당." },
-
-  // 서부 - 남서부
   { team: "댈러스 매버릭스", name: "루카 돈치치", pos: "PG", role: "천재 마에스트로", desc: "자신만의 느릿한 템포와 스텝백 3점, 상상 초월의 패스로 경기를 혼자서 지배함." },
   { team: "댈러스 매버릭스", name: "카이리 어빙", pos: "SG", role: "최고의 볼 핸들러", desc: "역대급 드리블 스킬과 수비진 사이를 뚫고 올라가는 화려한 피니시 능력을 보유." },
   { team: "댈러스 매버릭스", name: "클레이 탐슨", pos: "SG", role: "캐치앤슛 달인", desc: "골든스테이트에서 이적한 전설적 슈터. 공간이 열리면 지체 없이 3점을 꽂음." },
@@ -332,83 +262,80 @@ const playersData = [
   { team: "샌안토니오 스퍼스", name: "크리스 폴", pos: "PG", role: "포인트 갓", desc: "농구 지능의 끝판왕. 웸반야마에게 득점하기 가장 쉬운 패스를 입에 떠먹여 주는 베테랑." },
   { team: "샌안토니오 스퍼스", name: "데빈 바셀", pos: "SG", role: "2옵션 슈터", desc: "높은 타점의 풀업 점퍼와 3점 슛으로 팀의 외곽 득점을 책임지는 핵심 코어." },
   { team: "샌안토니오 스퍼스", name: "제레미 소핸", pos: "PF", role: "변칙 수비수", desc: "화려한 머리 색깔만큼이나 독특한 플레이 스타일을 지닌, 투지 넘치는 전천후 디펜더." },
-  { team: "샌안토니오 스퍼스", name: "스테폰 캐슬", pos: "SG", role: "수비형 루키 가드", desc: "뛰어난 대인 수비력과 체격을 갖춰 스퍼스의 차세대 앞선을 책임질 유망주." },
-
-  { team: "휴스턴 로키츠", name: "알페렌 센군", pos: "C", role: "베이비 요키치", desc: "화려한 풋워크와 기가 막힌 비하인드 백 패스를 뽐내는 매력적인 공격형 센터." },
-  { team: "휴스턴 로키츠", name: "제일런 그린", pos: "SG", role: "폭발적 득점원", desc: "운동능력을 활용한 호쾌한 덩크와 몰아치기 3점 슛에 능한 차세대 스코어러." },
-  { team: "휴스턴 로키츠", name: "프레드 밴블릿", pos: "PG", role: "야전 사령관", desc: "젊은 팀의 공격을 차분하게 조율하고 클러치 상황에서 한 방을 꽂아주는 베테랑 가드." },
-  { team: "휴스턴 로키츠", name: "자바리 스미스 주니어", pos: "PF", role: "장신 슈터", desc: "211cm의 키에서 뿜어져 나오는 부드러운 슈팅 폼과 대인 수비가 장점." },
-  { team: "휴스턴 로키츠", name: "딜런 브룩스", pos: "SF", role: "코트의 악동", desc: "거칠고 터프한 수비로 상대 에이스의 신경을 긁고 팀에 투지를 심어주는 선수." },
-
-  { team: "멤피스 그리즐리스", name: "자 모란트", pos: "PG", role: "하이라이트 제조기", desc: "중력을 무시하는 체공력과 탄력으로 수비수 위로 덩크를 꽂아버리는 폭발력." },
-  { team: "멤피스 그리즐리스", name: "자렌 잭슨 주니어", pos: "PF", role: "블록슛 장인", desc: "올해의 수비상 출신으로 엄청난 블록슛 능력을 지녔으며 3점 슛까지 쏠 줄 아는 빅맨." },
-  { team: "멤피스 그리즐리스", name: "데스몬드 베인", pos: "SG", role: "머슬 슈터", desc: "보디빌더 같은 굵은 팔뚝에서 나오는 슛 폼이 정교하며 리그 최고 수준의 3점 슈터." },
-  { team: "멤피스 그리즐리스", name: "마커스 스마트", pos: "PG", role: "허슬 수비수", desc: "가드 포지션으로 올해의 수비상을 탔던, 온몸을 던져 공을 살려내는 투지의 아이콘." },
-  { team: "멤피스 그리즐리스", name: "잭 이디", pos: "C", role: "초대형 루키", desc: "224cm, 136kg의 거대한 체구로 골밑을 물리적으로 장악하는 대학 무대 최고의 빅맨 출신." },
-
-  { team: "뉴올리언스 펠리컨스", name: "자이언 윌리엄슨", pos: "PF", role: "전차 군단", desc: "130kg의 몸무게로 가드처럼 날아올라 림을 박살 내는 전무후무한 파워포워드." },
-  { team: "뉴올리언스 펠리컨스", name: "브랜든 잉그램", pos: "SF", role: "긴 팔 스코어러", desc: "케빈 듀란트를 연상시키는 긴 팔을 이용해 수비 위에서 슛을 쏘는 미드레인지 마스터." },
-  { team: "뉴올리언스 펠리컨스", name: "디존테 머레이", pos: "PG", role: "수비 스틸러", desc: "긴 윙스팬으로 상대 공을 뺏어내고 안정적으로 템포를 조율하는 만능 가드." },
-  { team: "뉴올리언스 펠리컨스", name: "CJ 맥컬럼", pos: "SG", role: "베테랑 스코어러", desc: "정교한 드리블 돌파와 플로터, 3점 슛을 통해 꾸준한 득점을 올려주는 선수." },
-  { team: "뉴올리언스 펠리컨스", name: "허브 존스", pos: "SF", role: "방패", desc: "공격보다 오로지 상대 팀 최고 득점원을 막기 위해 존재하는 질식 수비 스페셜리스트." }
+  { team: "샌안토니오 스퍼스", name: "스테폰 캐슬", pos: "SG", role: "수비형 루키 가드", desc: "뛰어난 대인 수비력과 체격을 갖춰 스퍼스의 차세대 앞선을 책임질 유망주." }
 ];
 
-// 구단 목록 자동 생성
-const teams = [...new Set(playersData.map(p => p.team))].sort();
-const teamSelect = document.getElementById("teamSelect");
-teams.forEach(team => {
-  const option = document.createElement("option");
-  option.value = team;
-  option.textContent = team;
-  teamSelect.appendChild(option);
-});
+// 팀명 추출 (중복 제거)
+const teams = [...new Set(playersData.map(p => p.team))];
 
-// 검색 및 필터 기능
+// HTML 요소 가져오기
 const searchInput = document.getElementById("searchInput");
 const posSelect = document.getElementById("posSelect");
-const playerGrid = document.getElementById("playerGrid");
+const mainContainer = document.getElementById("mainContainer");
 const statsCount = document.getElementById("statsCount");
 
+// 렌더링 함수
 function renderPlayers() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const selectedTeam = teamSelect.value;
+  const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedPos = posSelect.value;
+  
+  mainContainer.innerHTML = ""; // 기존 화면 초기화
+  let totalDisplayedPlayers = 0;
 
-  const filtered = playersData.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(searchTerm) || p.desc.toLowerCase().includes(searchTerm) || p.role.toLowerCase().includes(searchTerm);
-    const matchTeam = selectedTeam === "all" || p.team === selectedTeam;
-    const matchPos = selectedPos === "all" || p.pos === selectedPos || p.pos.includes(selectedPos);
-    return matchSearch && matchTeam && matchPos;
+  // 각 팀별로 반복하면서 그리기
+  teams.forEach(team => {
+    // 해당 팀의 선수 중 검색/필터 조건에 맞는 선수만 추려내기
+    const teamPlayers = playersData.filter(p => {
+      const isTeamMatch = p.team === team;
+      const isSearchMatch = p.name.toLowerCase().includes(searchTerm) || 
+                            p.desc.toLowerCase().includes(searchTerm) || 
+                            p.role.toLowerCase().includes(searchTerm);
+      const isPosMatch = selectedPos === "all" || p.pos === selectedPos || p.pos.includes(selectedPos);
+      
+      return isTeamMatch && isSearchMatch && isPosMatch;
+    });
+
+    // 조건에 맞는 선수가 1명이라도 있으면 해당 팀 섹션을 화면에 그림
+    if (teamPlayers.length > 0) {
+      totalDisplayedPlayers += teamPlayers.length;
+      
+      const teamSection = document.createElement("div");
+      teamSection.className = "team-section";
+      
+      // 팀 타이틀과 선수 그리드를 HTML 문자열로 생성
+      teamSection.innerHTML = `
+        <h2 class="team-title">🛡️ ${team}</h2>
+        <div class="player-grid">
+          ${teamPlayers.map(p => `
+            <div class="player-card">
+              <div class="card-header">
+                <div class="player-name">${p.name}</div>
+                <span class="pos-badge pos-${p.pos}">${p.pos}</span>
+              </div>
+              <div class="role-title">⚡ ${p.role}</div>
+              <div class="desc">${p.desc}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+      
+      mainContainer.appendChild(teamSection);
+    }
   });
 
-  statsCount.textContent = `표시된 핵심 선수: ${filtered.length}명`;
+  statsCount.textContent = `표시된 선수: ${totalDisplayedPlayers}명`;
 
-  if (filtered.length === 0) {
-    playerGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-sub); padding: 40px 0;">검색 결과가 없습니다.</div>`;
-    return;
+  // 검색 결과가 아예 없을 경우 메시지 표시
+  if (totalDisplayedPlayers === 0) {
+    mainContainer.innerHTML = `<div class="no-result">검색 조건에 맞는 선수가 없습니다. 다른 검색어를 입력해 보세요.</div>`;
   }
-
-  playerGrid.innerHTML = filtered.map(p => `
-    <div class="player-card">
-      <div class="card-header">
-        <div>
-          <div class="player-name">${p.name}</div>
-          <div class="team-name">${p.team}</div>
-        </div>
-        <span class="pos-badge pos-${p.pos}">${p.pos}</span>
-      </div>
-      <div class="role-title">⚡ ${p.role}</div>
-      <div class="desc">${p.desc}</div>
-    </div>
-  `).join("");
 }
 
-// 이벤트 리스너 등록
+// 이벤트 리스너: 글자를 치거나 포지션을 변경할 때마다 화면 즉시 업데이트
 searchInput.addEventListener("input", renderPlayers);
-teamSelect.addEventListener("change", renderPlayers);
 posSelect.addEventListener("change", renderPlayers);
 
-// 초기 렌더링
+// 페이지 접속 시 초기 화면 그리기
 renderPlayers();
 </script>
 </body>

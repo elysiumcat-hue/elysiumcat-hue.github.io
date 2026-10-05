@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026-27 NBA 30개 구단 입문 가이드</title>
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #161f30;
+      --bg-card-hover: #1e2b42;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+      --east-color: #3b82f6;
+      --west-color: #ef4444;
+      --accent: #f59e0b;
+      --font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* 컨트롤 영역 */
+    .controls {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .search-box {
+      width: 100%;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px;
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background: #1e293b;
+      color: var(--text-main);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0b0f19;
+      font-weight: 700;
+    }
+
+    .stats-summary {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    /* 그리드 레이아웃 */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
+    }
+
+    /* 팀 카드 */
+    .team-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+
+    .team-card:hover {
+      transform: translateY(-3px);
+      border-color: #64748b;
+      background: var(--bg-card-hover);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .team-titles h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .team-titles .en-name {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .badge-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .conf-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .conf-badge.east {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .conf-badge.west {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    .tier-badge {
+      font-size: 0.75rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .info-section {
+      font-size: 0.9rem;
+    }
+
+    .info-title {
+      font-weight: 700;
+      color: #e2e8f0;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .player-tag-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .player-tag {
+      background: #0f172a;
+      border: 1px solid var(--border-color);
+      color: #38bdf8;
+      font-size: 0.8rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .watch-point {
+      background: rgba(0, 0, 0, 0.25);
+      border-left: 3px solid var(--accent);
+      padding: 8px 10px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    /* 반응형 */
+    @media (max-width: 640px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🏀 NBA 30개 팀 시청 가이드</h1>
+    <p>응원할 팀과 좋아하는 선수를 찾아보세요. 검색과 필터로 팀 정보를 확인할 수 있습니다.</p>
+  </header>
+
+  <section class="controls">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="팀명, 연고지, 스타 선수 이름을 검색하세요 (예: 커리, 닉스, 돈치치, 보스턴)...">
+    </div>
+    <div class="filter-group" id="filterGroup">
+      <button class="filter-btn active" data-filter="all">전체 (30)</button>
+      <button class="filter-btn" data-filter="east">동부 콘퍼런스 (15)</button>
+      <button class="filter-btn" data-filter="west">서부 콘퍼런스 (15)</button>
+      <button class="filter-btn" data-filter="contender">우승권 경쟁팀</button>
+      <button class="filter-btn" data-filter="playoff">플레이오프권</button>
+      <button class="filter-btn" data-filter="rising">유망주 / 리빌딩</button>
+    </div>
+  </section>
+
+  <div class="stats-summary" id="statsSummary">표시 중인 구단: 30개</div>
+
+  <main class="team-grid" id="teamGrid"></main>
+</div>
+
+<script>
+const teams = [
+  // 동부 - 대서양 (Atlantic)
+  {
+    nameKr: "뉴욕 닉스",
+    nameEn: "New York Knicks",
+    city: "뉴욕 (메디슨 스퀘어 가든)",
+    conf: "east",
+    div: "대서양 (Atlantic)",
+    tier: "contender",
+    tierName: "디펜딩 챔피언",
+    players: ["제일런 브런슨", "칼-앤서니 타운스", "OG 아누노비", "미칼 브릿지스"],
+    style: "강한 하프코트 수비와 브런슨의 영리한 득점력, 열광적인 홈 관중 분위기",
+    point: "오랜 무관을 깨고 정상을 밟은 뉴욕의 끈끈하고 투지 넘치는 농구를 만끽할 수 있습니다."
+  },
+  {
+    nameKr: "보스턴 셀틱스",
+    nameEn: "Boston Celtics",
+    city: "보스턴 (TD 가든)",
+    conf: "east",
+    div: "대서양 (Atlantic)",
+    tier: "contender",
+    tierName: "최강 전력 우승후보",
+    players: ["제이슨 테이텀", "제일런 브라운", "즈루 할러데이", "데릭 화이트"],
+    style: "5명 전원이 3점 슛과 수비가 가능한 완성형 '스페이스 & 디펜스' 농구",
+    point: "현대 농구의 정석 시스템을 보여주는 팀으로 완성도 높은 조직력을 좋아한다면 1순위 추천."
+  },
+  {
+    nameKr: "필라델피아 세븐티식서스",
+    nameEn: "Philadelphia 76ers",
+    city: "필라델피아 (스피니티 모바일 아레나)",
+    conf: "east",
+    div: "대서양 (Atlantic)",
+    tier: "contender",
+    tierName: "빅3 화력 우승권",
+    players: ["조엘 엠비드", "타이리스 맥시", "폴 조지"],
+    style: "MVP 센터 엠비드의 골밑 지배력과 맥시의 초고속 돌파, 폴 조지의 슈팅",
+    point: "정통 슈퍼스타 빅맨과 테크니션 윙 자원의 정교한 득점 기술을 감상하기 좋습니다."
+  },
+  {
+    nameKr: "토론토 랩터스",
+    nameEn: "Toronto Raptors",
+    city: "토론토 (스코샤뱅크 아레나)",
+    conf: "east",
+    div: "대서양 (Atlantic)",
+    tier: "playoff",
+    tierName: "플레이오프 다크호스",
+    players: ["스코티 반즈", "이마누엘 퀴클리", "RJ 배럿"],
+    style: "긴 윙스팬을 활용한 전방위 압박 수비와 빠른 트랜지션 공격",
+    point: "유일한 캐나다 연고 팀으로, 젊고 역동적인 에너지 레벨이 장점입니다."
+  },
+  {
+    nameKr: "브루클린 네츠",
+    nameEn: "Brooklyn Nets",
+    city: "브루클린 (바클레이스 센터)",
+    conf: "east",
+    div: "대서양 (Atlantic)",
+    tier: "rising",
+    tierName: "리빌딩 팀",
+    players: ["캠 토머스", "닉 클랙스턴"],
+    style: "폭발적인 아이솔레이션 득점원 캠 토머스 중심의 공격 농구",
+    point: "팀 재건 단계로 미래 드래프트 자산을 모으며 유망주들의 기량 성장을 지켜보는 재미."
+  },
+
+  // 동부 - 중부 (Central)
+  {
+    nameKr: "밀워키 벅스",
+    nameEn: "Milwaukee Bucks",
+    city: "밀워키 (파이서브 포럼)",
+    conf: "east",
+    div: "중부 (Central)",
+    tier: "contender",
+    tierName: "우승권 경쟁팀",
+    players: ["야니스 아데토쿤보", "데미안 릴라드"],
+    style: "'그리스 괴물' 아데토쿤보의 페인트존 파괴력과 릴라드의 딥쓰리 클러치 샷",
+    point: "리그 최고 수준의 투맨 게임 듀오가 선보이는 파괴적인 득점력을 볼 수 있습니다."
+  },
+  {
+    nameKr: "클리블랜드 캐벌리어스",
+    nameEn: "Cleveland Cavaliers",
+    city: "클리블랜드 (로켓 아레나)",
+    conf: "east",
+    div: "중부 (Central)",
+    tier: "contender",
+    tierName: "동부 상위권 강호",
+    players: ["도너번 미첼", "다리우스 갈랜드", "에반 모블리", "자렛 알렌"],
+    style: "쌍포 가드진의 빠른 득점포와 트윈타워의 철벽 림 프로텍팅",
+    point: "수비 지표가 탄탄하며, 경기 후반 미첼의 클러치 폭격이 매우 박진감 넘칩니다."
+  },
+  {
+    nameKr: "인디애나 페이서스",
+    nameEn: "Indiana Pacers",
+    city: "인디애나폴리스 (게인브리지 필드하우스)",
+    conf: "east",
+    div: "중부 (Central)",
+    tier: "playoff",
+    tierName: "초고속 공격 농구",
+    players: ["타이리스 할리버튼", "파스칼 시아캄", "마일스 터너"],
+    style: "리그에서 가장 빠른 템포로 몰아치는 런앤건 공격 및 할리버튼의 매직 패스",
+    point: "화끈한 다득점 난타전을 좋아한다면 지루할 틈이 없는 최고의 팀입니다."
+  },
+  {
+    nameKr: "디트로이트 피스턴스",
+    nameEn: "Detroit Pistons",
+    city: "디트로이트 (리틀시저스 아레나)",
+    conf: "east",
+    div: "중부 (Central)",
+    tier: "playoff",
+    tierName: "돌풍의 영건 군단",
+    players: ["케이드 커닝햄", "제이든 아이비", "제일런 듀렌"],
+    style: "피지컬과 운동능력을 앞세운 젊은 코어들의 거침없는 브레이크스루",
+    point: "만년 하위권에서 동부의 다크호스로 치고 올라오는 성장 스토리가 돋보입니다."
+  },
+  {
+    nameKr: "시카고 불스",
+    nameEn: "Chicago Bulls",
+    city: "시카고 (유나이티드 센터)",
+    conf: "east",
+    div: "중부 (Central)",
+    tier: "rising",
+    tierName: "리툴링 진행 중",
+    players: ["코비 화이트", "조쉬 기디", "마타스 부젤리스"],
+    style: "기디의 장신 플레이메이킹과 화이트의 외곽 슛을 필두로 한 새판짜기",
+    point: "마이클 조던의 전설이 깃든 홈구장에서 새로운 코어를 육성해 나가는 과도기."
+  },
+
+  // 동부 - 동남부 (Southeast)
+  {
+    nameKr: "올랜도 매직",
+    nameEn: "Orlando Magic",
+    city: "올랜도 (기아 센터)",
+    conf: "east",
+    div: "동남부 (Southeast)",
+    tier: "playoff",
+    tierName: "질식 수비 강자",
+    players: ["파올로 반케로", "프란츠 바그너", "제일런 석스"],
+    style: "전 포지션이 크고 단단한 장신 라인업으로 상대 득점을 틀어막는 질식 수비",
+    point: "올스타로 성장한 장신 포워드 반케로의 파워풀한 올라운드 플레이가 핵심."
+  },
+  {
+    nameKr: "마이애미 히트",
+    nameEn: "Miami Heat",
+    city: "마이애미 (카세야 센터)",
+    conf: "east",
+    div: "동남부 (Southeast)",
+    tier: "playoff",
+    tierName: "끈끈한 멘탈리티",
+    players: ["지미 버틀러", "뱀 아데바요", "타일러 히로"],
+    style: "명장 에릭 스포엘스트라 감독의 정밀한 수비 전술과 불굴의 '히트 컬처'",
+    point: "정규시즌 순위와 상관없이 봄(플레이오프)만 되면 강팀을 집어삼키는 언더독 본색."
+  },
+  {
+    nameKr: "애틀랜타 호크스",
+    nameEn: "Atlanta Hawks",
+    city: "애틀랜타 (스테이트팜 아레나)",
+    conf: "east",
+    div: "동남부 (Southeast)",
+    tier: "playoff",
+    tierName: "플레이-인 경쟁권",
+    players: ["트레이 영", "자카리 리사셰", "제일런 존슨"],
+    style: "트레이 영의 긴 사거리 3점과 로브 패스, 신인 유망주들의 기동력",
+    point: "영의 픽앤롤 마스터리와 젊은 포워드진의 덩크 하이라이트가 볼거리입니다."
+  },
+  {
+    nameKr: "샬럿 호니츠",
+    nameEn: "Charlotte Hornets",
+    city: "샬럿 (스펙트럼 센터)",
+    conf: "east",
+    div: "동남부 (Southeast)",
+    tier: "rising",
+    tierName: "쇼타임 하이라이트",
+    players: ["라멜로 볼", "브랜든 밀러", "마일스 브릿지스"],
+    style: "라멜로 볼의 기상천외한 노룩 패스와 빠른 템포의 오픈 코트 농구",
+    point: "성적과 무관하게 하이라이트 필름을 가장 많이 만들어내는 스타일리시한 팀."
+  },
+  {
+    nameKr: "워싱턴 위저즈",
+    nameEn: "Washington Wizards",
+    city: "워싱턴 D.C. (캐피털 원 아레나)",
+    conf: "east",
+    div: "동남부 (Southeast)",
+    tier: "rising",
+    tierName: "전면 리빌딩",
+    players: ["알렉스 사르", "빌랄 쿨리발리", "버브 캐링턴"],
+    style: "프랑스 출신 대형 유망주 빅맨 사르를 축으로 한 장기적 전력 보강",
+    point: "팀의 기초부터 다시 다지는 중으로, 유망주들의 출전 시간과 경험 축적이 핵심."
+  },
+
+  // 서부 - 북서부 (Northwest)
+  {
+    nameKr: "오클라호마시티 썬더",
+    nameEn: "Oklahoma City Thunder",
+    city: "오클라호마시티 (페이컴 센터)",
+    conf: "west",
+    div: "북서부 (Northwest)",
+    tier: "contender",
+    tierName: "서부 최강 우승후보",
+    players: ["샤이 길저스-알렉산더", "쳇 홈그렌", "제일런 윌리엄스"],
+    style: "리그 최상급 스페이싱, 끈끈한 스위치 디펜스, SGA의 무결점 득점력",
+    point: "선수단 전원이 젊으면서도 완벽한 공수 밸런스를 갖춘 가장 무서운 우승권 팀."
+  },
+  {
+    nameKr: "덴버 너기츠",
+    nameEn: "Denver Nuggets",
+    city: "덴버 (볼 아레나)",
+    conf: "west",
+    div: "북서부 (Northwest)",
+    tier: "contender",
+    tierName: "요키치의 마스터피스",
+    players: ["니콜라 요키치", "자말 머레이", "애런 고든"],
+    style: "세계 최고의 농구 도사 요키치를 거쳐 나오는 이타적이고 예술적인 패스 게임",
+    point: "정통 센터의 패싱 플레이와 머레이와의 환상적인 2대2 호흡은 농구 감상의 백미."
+  },
+  {
+    nameKr: "미네소타 팀버울브스",
+    nameEn: "Minnesota Timberwolves",
+    city: "미니애폴리스 (타깃 센터)",
+    conf: "west",
+    div: "북서부 (Northwest)",
+    tier: "contender",
+    tierName: "리그 No.1 방패",
+    players: ["앤서니 에드워즈", "루디 고베어", "줄리어스 랜들"],
+    style: "고베어의 골밑 철벽 수비와 차세대 NBA 간판 에드워즈의 호쾌한 슬램덩크",
+    point: "조던을 연상시키는 에드워즈의 역동적인 운동능력과 강력한 수비 전술."
+  },
+  {
+    nameKr: "유타 재즈",
+    nameEn: "Utah Jazz",
+    city: "솔트레이크시티 (델타 센터)",
+    conf: "west",
+    div: "북서부 (Northwest)",
+    tier: "rising",
+    tierName: "슈팅 빅맨 군단",
+    players: ["라우리 마카넨", "키욘테 조지", "워커 케슬러"],
+    style: "7피트 장신 슈터 마카넨을 활용한 오프더볼 플레이와 케슬러의 블록슛",
+    point: "유럽 특유의 섬세한 슈팅 농구와 유망주 가드들의 성장을 지켜보는 쏠쏠함."
+  },
+  {
+    nameKr: "포틀랜드 트레일블레이저스",
+    nameEn: "Portland Trail Blazers",
+    city: "포틀랜드 (모다 센터)",
+    conf: "west",
+    div: "북서부 (Northwest)",
+    tier: "rising",
+    tierName: "젊은 백코트 리빌딩",
+    players: ["스쿳 헨더슨", "셰이든 샤프", "도너번 클링건"],
+    style: "운동능력이 뛰어난 가드·윙 유망주 중심의 빠른 트랜지션 공격",
+    point: "차세대 백코트 스타로 꼽히는 헨더슨과 샤프의 기량 만개 여부가 관전 포인트."
+  },
+
+  // 서부 - 태평양 (Pacific)
+  {
+    nameKr: "골든스테이트 워리어스",
+    nameEn: "Golden State Warriors",
+    city: "샌프란시스코 (체이스 센터)",
+    conf: "west",
+    div: "태평양 (Pacific)",
+    tier: "playoff",
+    tierName: "커리의 3점 혁명",
+    players: ["스테픈 커리", "드레이먼드 그린", "조나단 쿠밍가"],
+    style: "커리의 쉴 틈 없는 오프더볼 무브먼트와 딥쓰리, 그린의 컨트롤 타워 패스",
+    point: "농구 역사를 바꾼 3점 슛의 신 커리의 플레이는 입문자가 반드시 봐야 할 필수 코스."
+  },
+  {
+    nameKr: "로스앤젤레스 레이커스",
+    nameEn: "Los Angeles Lakers",
+    city: "로스앤젤레스 (크립토닷컴 아레나)",
+    conf: "west",
+    div: "태평양 (Pacific)",
+    tier: "playoff",
+    tierName: "전설 르브론의 황혼",
+    players: ["르브론 제임스", "앤서니 데이비스", "오스틴 리브스"],
+    style: "르브론의 컴퓨터 같은 농구 BQ와 패스, 데이비스의 지배적인 골밑 장악력",
+    point: "NBA 역사상 최다 득점자인 르브론 제임스의 황혼기 경기를 실시간으로 보는 역사성."
+  },
+  {
+    nameKr: "피닉스 선즈",
+    nameEn: "Phoenix Suns",
+    city: "피닉스 (풋프린트 센터)",
+    conf: "west",
+    div: "태평양 (Pacific)",
+    tier: "playoff",
+    tierName: "미드레인지의 장인들",
+    players: ["케빈 듀란트", "데빈 부커", "브래들리 빌"],
+    style: "수비가 알고도 못 막는 듀란트와 부커의 치명적인 1대1 풀업 점퍼",
+    point: "순수한 슈팅 기술과 풀업 점퍼의 미학을 가장 잘 보여주는 슈퍼스타 라인업."
+  },
+  {
+    nameKr: "새크라멘토 킹스",
+    nameEn: "Sacramento Kings",
+    city: "새크라멘토 (골든 1 센터)",
+    conf: "west",
+    div: "태평양 (Pacific)",
+    tier: "playoff",
+    tierName: "초고속 빔 팀(Beam Team)",
+    players: ["디애런 팍스", "도만타스 사보니스", "더마 드로잔"],
+    style: "사보니스의 핸드오프 패스와 팍스의 전광석화 같은 돌파, 드로잔의 클러치 득점",
+    point: "승리할 때마다 하늘로 보라색 레이저 빔을 쏘아 올리는 열정적인 홈 팬 문화."
+  },
+  {
+    nameKr: "로스앤젤레스 클리퍼스",
+    nameEn: "LA Clippers",
+    city: "잉글우드 (인튜이트 돔)",
+    conf: "west",
+    div: "태평양 (Pacific)",
+    tier: "playoff",
+    tierName: "베테랑 하프코트 농구",
+    players: ["카와이 레너드", "제임스 하든", "이비차 주바치"],
+    style: "하든의 노련한 픽앤롤 조율과 레너드의 견고한 공수 양면 에이스 플레이",
+    point: "최첨단 시설을 갖춘 새로운 홈구장 '인튜이트 돔'에서 펼쳐지는 베테랑들의 도전."
+  },
+
+  // 서부 - 남서부 (Southwest)
+  {
+    nameKr: "샌안토니오 스퍼스",
+    nameEn: "San Antonio Spurs",
+    city: "샌안토니오 (프로스트 뱅크 센터)",
+    conf: "west",
+    div: "남서부 (Southwest)",
+    tier: "contender",
+    tierName: "외계인 웸반야마의 시대",
+    players: ["빅터 웸반야마", "크리스 폴", "스테폰 캐슬"],
+    style: "신장 224cm 웸반야마의 림 프로텍팅과 외곽 3점, 크리스 폴의 교과서 패스",
+    point: "농구 만화 캐릭터 같은 웸반야마가 리그를 지배해 가는 과정을 실시간으로 볼 수 있습니다."
+  },
+  {
+    nameKr: "댈러스 매버릭스",
+    nameEn: "Dallas Mavericks",
+    city: "댈러스 (아메리칸 에어라인스 센터)",
+    conf: "west",
+    div: "남서부 (Southwest)",
+    tier: "contender",
+    tierName: "지구 최강 백코트",
+    players: ["루카 돈치치", "카이리 어빙", "클레이 탐슨"],
+    style: "돈치치의 천재적인 스텝백 3점과 어빙의 화려한 드리블, 탐슨의 캐치앤샷",
+    point: "보는 눈이 즐거운 화려한 스킬셋과 클러치 상황에서의 극적인 역전 쇼."
+  },
+  {
+    nameKr: "휴스턴 로키츠",
+    nameEn: "Houston Rockets",
+    city: "휴스턴 (도요타 센터)",
+    conf: "west",
+    div: "남서부 (Southwest)",
+    tier: "playoff",
+    tierName: "끈끈한 터프가이 농구",
+    players: ["알페렌 센군", "제일런 그린", "아멘 톰슨"],
+    style: "'베이비 요키치' 센군의 감각적인 골밑 패스와 왕성한 리바운드 장악",
+    point: "이메 우도카 감독의 강력한 수비 지휘 아래 무섭게 치고 올라오는 터프한 팀 컬러."
+  },
+  {
+    nameKr: "멤피스 그리즐리스",
+    nameEn: "Memphis Grizzlies",
+    city: "멤피스 (페덱스 포럼)",
+    conf: "west",
+    div: "남서부 (Southwest)",
+    tier: "playoff",
+    tierName: "공중 액션 쇼타임",
+    players: ["자 모란트", "자렌 잭슨 주니어", "잭 이디"],
+    style: "자 모란트의 중력을 거스르는 공중 체공 덩크와 잭슨 주니어의 블록슛 파티",
+    point: "포인트가드 모란트가 보여주는 아크로바틱한 레이업과 덩크는 최고의 볼거리."
+  },
+  {
+    nameKr: "뉴올리언스 펠리컨스",
+    nameEn: "New Orleans Pelicans",
+    city: "뉴올리언스 (스무디킹 센터)",
+    conf: "west",
+    div: "남서부 (Southwest)",
+    tier: "playoff",
+    tierName: "불도저 골밑 폭격",
+    players: ["자이언 윌리엄슨", "디존테 머레이", "브랜든 잉그램"],
+    style: "막을 수 없는 자이언의 압도적인 골밑 돌파와 머레이의 안정적인 앞선 수비",
+    point: "130kg 육중한 체구로 하늘을 날아오르는 자이언의 원초적인 힘을 체감할 수 있습니다."
+  }
+];
+
+const teamGrid = document.getElementById("teamGrid");
+const searchInput = document.getElementById("searchInput");
+const filterButtons = document.querySelectorAll(".filter-btn");
+const statsSummary = document.getElementById("statsSummary");
+
+let currentFilter = "all";
+let currentSearch = "";
+
+function renderTeams() {
+  const filtered = teams.filter(team => {
+    // 텍스트 검색 조건 (팀명, 영문명, 도시, 선수)
+    const q = currentSearch.toLowerCase();
+    const matchSearch = 
+      team.nameKr.toLowerCase().includes(q) ||
+      team.nameEn.toLowerCase().includes(q) ||
+      team.city.toLowerCase().includes(q) ||
+      team.players.some(p => p.toLowerCase().includes(q));
+
+    if (!matchSearch) return false;
+
+    // 카테고리 필터 조건
+    if (currentFilter === "all") return true;
+    if (currentFilter === "east" || currentFilter === "west") return team.conf === currentFilter;
+    if (currentFilter === "contender") return team.tier === "contender";
+    if (currentFilter === "playoff") return team.tier === "playoff";
+    if (currentFilter === "rising") return team.tier === "rising";
+
+    return true;
+  });
+
+  statsSummary.textContent = `표시 중인 구단: ${filtered.length}개`;
+
+  if (filtered.length === 0) {
+    teamGrid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 48px 0; color: var(--text-muted);">
+        <p style="font-size: 1.2rem;">검색 결과가 없습니다.</p>
+        <p style="font-size: 0.9rem; margin-top: 4px;">다른 팀명이나 선수 이름으로 검색해 보세요.</p>
+      </div>
+    `;
+    return;
+  }
+
+  teamGrid.innerHTML = filtered.map(t => `
+    <article class="team-card">
+      <div class="card-header">
+        <div class="team-titles">
+          <h2>${t.nameKr}</h2>
+          <div class="en-name">${t.nameEn}</div>
+        </div>
+        <div class="badge-wrap">
+          <span class="conf-badge ${t.conf}">${t.conf === "east" ? "동부" : "서부"}</span>
+          <span class="tier-badge">${t.tierName}</span>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <span>📍 ${t.city}</span>
+        <span>🏷️️ ${t.div}</span>
+      </div>
+
+      <div class="info-section">
+        <div class="info-title">⭐ 핵심 간판 스타</div>
+        <div class="player-tag-wrap">
+          ${t.players.map(p => `<span class="player-tag">${p}</span>`).join("")}
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-title">⚡ 팀 컬러 및 전술</div>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">${t.style}</p>
+      </div>
+
+      <div class="watch-point">
+        <strong>👀 입문자 관전 포인트:</strong> ${t.point}
+      </div>
+    </article>
+  `).join("");
+}
+
+// 필터 버튼 이벤트
+filterButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    filterButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderTeams();
+  });
+});
+
+// 검색 이벤트
+searchInput.addEventListener("input", (e) => {
+  currentSearch = e.target.value.trim();
+  renderTeams();
+});
+
+// 초기 렌더링
+renderTeams();
+</script>
+
+</body>
+</html>
